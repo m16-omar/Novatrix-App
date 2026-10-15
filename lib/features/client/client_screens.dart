@@ -12,6 +12,7 @@ import '../../core/widgets/form_fields.dart';
 import '../../core/widgets/widgets.dart';
 import '../../data/models/portal.dart';
 import '../../data/repositories/portal_repository.dart';
+import '../notifications/notifications_screen.dart';
 import '../shell/app_shell.dart';
 import '../shell/workspace.dart';
 
@@ -23,12 +24,18 @@ final _overviewProvider = FutureProvider<(List<ClientProject>, List<Ticket>)>((r
 
 /// Where a project is in delivery: Discovery → Build → Testing → Launch → Support.
 class StageTracker extends StatelessWidget {
-  const StageTracker({super.key, required this.project});
+  const StageTracker({super.key, required this.project, this.onBrand = false});
   final ClientProject project;
+
+  /// Drawn in white, for the gradient banner on the client home.
+  final bool onBrand;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
+    final white = Colors.white;
+    final line = onBrand ? white.withValues(alpha: 0.3) : p.muted;
+    final done = onBrand ? white : p.brand;
     final current = project.stageIndex;
     final currentLabel = current >= 0 && current < projectStages.length ? projectStages[current].$2 : 'Closed';
     return Semantics(
@@ -45,7 +52,7 @@ class StageTracker extends StatelessWidget {
                         Expanded(
                           child: Container(
                             height: 2,
-                            color: i == 0 ? Colors.transparent : (i <= current ? p.brand : p.muted),
+                            color: i == 0 ? Colors.transparent : (i <= current ? done : line),
                           ),
                         ),
                         Container(
@@ -54,18 +61,20 @@ class StageTracker extends StatelessWidget {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            gradient: i < current ? p.gradient : null,
-                            color: i < current ? null : p.card,
+                            gradient: i < current && !onBrand ? p.gradient : null,
+                            color: i < current ? (onBrand ? white : null) : (onBrand ? Colors.transparent : p.card),
                             border: Border.all(
-                              color: i == current ? p.brand : (i < current ? Colors.transparent : p.border),
+                              color: i == current ? done : (i < current ? Colors.transparent : (onBrand ? line : p.border)),
                               width: i == current ? 2 : 1,
                             ),
                           ),
                           child: i < current
-                              ? const Icon(LucideIcons.check, size: 13, color: Colors.white)
+                              ? Icon(LucideIcons.check, size: 13, color: onBrand ? p.brand : white)
                               : Text('${i + 1}',
                                   style: context.text.labelSmall?.copyWith(
-                                    color: i == current ? p.brand : p.mutedForeground,
+                                    color: onBrand
+                                        ? (i == current ? white : white.withValues(alpha: 0.7))
+                                        : (i == current ? p.brand : p.mutedForeground),
                                     fontWeight: FontWeight.w700,
                                   )),
                         ),
@@ -74,7 +83,7 @@ class StageTracker extends StatelessWidget {
                             height: 2,
                             color: i == projectStages.length - 1
                                 ? Colors.transparent
-                                : (i < current ? p.brand : p.muted),
+                                : (i < current ? done : line),
                           ),
                         ),
                       ],
@@ -83,7 +92,9 @@ class StageTracker extends StatelessWidget {
                     Text(
                       stage.$2,
                       style: context.text.labelSmall?.copyWith(
-                        color: i == current ? p.foreground : p.mutedForeground,
+                        color: onBrand
+                            ? (i == current ? white : white.withValues(alpha: 0.75))
+                            : (i == current ? p.foreground : p.mutedForeground),
                         fontWeight: i == current ? FontWeight.w700 : FontWeight.w500,
                       ),
                     ),
@@ -106,116 +117,436 @@ class ClientDashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(sessionProvider).value?.user;
+    final session = ref.watch(sessionProvider).value;
+    final p = context.palette;
+    final areas = session == null ? const <Workspace>[] : Workspace.available(session.roles);
     return Scaffold(
-      appBar: const WorkspaceAppBar(workspace: Workspace.client),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(projectsProvider);
-          ref.invalidate(ticketsProvider);
-          await ref.read(sessionProvider.notifier).refreshRoles();
-        },
-        child: ListView(
-          padding: pagePadding,
+      body: SafeArea(
+        bottom: false,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(projectsProvider);
+            ref.invalidate(ticketsProvider);
+            await ref.read(sessionProvider.notifier).refreshRoles();
+          },
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${greeting()}, ${session?.user.firstName ?? ''} 👋', style: context.text.titleLarge),
+                        const SizedBox(height: 2),
+                        Text("Here's where your projects stand.", style: context.text.bodySmall),
+                      ],
+                    ),
+                  ),
+                  const NotificationBell(),
+                  if (session != null)
+                    IconButton(
+                      tooltip: 'My profile',
+                      onPressed: () => context.go('/profile'),
+                      icon: Avatar(user: session.user, size: 40),
+                    ),
+                ],
+              ),
+              // People who also learn or teach can switch area from here.
+              if (session != null && areas.length > 1) ...[
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: ActionChip(
+                    key: const ValueKey('workspace-switcher'),
+                    avatar: Icon(LucideIcons.briefcase, size: 15, color: p.brand),
+                    label: const Text('Client area'),
+                    onPressed: () => showWorkspaceSwitcher(context, session.roles, Workspace.client),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 18),
+              AsyncBody(
+                provider: _overviewProvider,
+                loadingLabel: 'Loading your dashboard…',
+                builder: (data) => _ClientHomeBody(projects: data.$1, tickets: data.$2),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ClientHomeBody extends StatelessWidget {
+  const _ClientHomeBody({required this.projects, required this.tickets});
+
+  final List<ClientProject> projects;
+  final List<Ticket> tickets;
+
+  @override
+  Widget build(BuildContext context) {
+    final active = projects.where((p) => !p.isClosed).toList()
+      ..sort((a, b) => (a.targetEndDate ?? DateTime(9999)).compareTo(b.targetEndDate ?? DateTime(9999)));
+    // The banner shows the active project due soonest; the rest are listed below.
+    final focus = active.firstOrNull ?? projects.firstOrNull;
+    final others = [for (final p in (active.isEmpty ? projects : active)) if (p != focus) p];
+    final open = tickets.where((t) => t.isOpen).toList();
+    final urgent = open.where((t) => t.isUrgent).length;
+    final documents = projects.fold(0, (n, p) => n + p.documents.length);
+    final updates = [
+      for (final p in projects)
+        for (final u in p.updates) (u, p),
+    ]..sort((a, b) => (b.$1.createdAt ?? DateTime(2000)).compareTo(a.$1.createdAt ?? DateTime(2000)));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (focus == null) const _NoProjectBanner() else _ProjectBanner(project: focus),
+        const SizedBox(height: 18),
+        const _QuickActions(),
+        const SizedBox(height: 18),
+        Row(
           children: [
-            PageHeader(
-              eyebrow: 'Client dashboard',
-              title: 'Welcome, ${user?.firstName ?? ''}.',
-              intro: 'Your projects with Novatrix, the latest updates, and your support requests.',
+            _Count(
+              icon: LucideIcons.briefcase,
+              value: active.length,
+              label: active.length == 1 ? 'Project' : 'Projects',
+              onTap: () => context.go('/client/projects'),
             ),
-            const SizedBox(height: 16),
-            GradientButton(
-              label: 'Raise a support request',
-              icon: LucideIcons.messageSquarePlus,
-              onPressed: () => context.go('/client/support/new'),
+            const SizedBox(width: 10),
+            _Count(
+              icon: LucideIcons.lifeBuoy,
+              value: open.length,
+              label: urgent > 0 ? 'Open · $urgent urgent' : (open.length == 1 ? 'Open ticket' : 'Open tickets'),
+              warning: urgent > 0,
+              onTap: () => context.go('/client/support'),
             ),
-            const SizedBox(height: 20),
-            AsyncBody(
-              provider: _overviewProvider,
-              loadingLabel: 'Loading your dashboard…',
-              builder: (data) {
-                final (projects, tickets) = data;
-                final active = projects.where((p) => !p.isClosed).toList();
-                final open = tickets.where((t) => t.isOpen).toList();
-                final urgent = open.where((t) => t.isUrgent).length;
-                final updates = [
-                  for (final p in projects)
-                    for (final u in p.updates) (u, p),
-                ]..sort((a, b) => (b.$1.createdAt ?? DateTime(2000)).compareTo(a.$1.createdAt ?? DateTime(2000)));
-                final deadlines = active.map((p) => p.targetEndDate).whereType<DateTime>().toList()..sort();
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+            const SizedBox(width: 10),
+            _Count(icon: LucideIcons.fileText, value: documents, label: documents == 1 ? 'Document' : 'Documents'),
+          ],
+        ),
+        if (others.isNotEmpty) ...[
+          SectionTitle('Other projects', action: 'All projects', onAction: () => context.go('/client/projects')),
+          for (final p in others.take(3)) ...[ProjectCard(project: p), const SizedBox(height: 12)],
+        ],
+        const SectionTitle('Latest updates'),
+        if (updates.isEmpty)
+          const _Placeholder(
+            icon: LucideIcons.megaphone,
+            text: "Your project team's updates will appear here.",
+          )
+        else
+          AppCard(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+            child: Column(
+              children: [
+                for (final (i, (u, p)) in updates.take(4).indexed)
+                  _UpdateRow(update: u, projectTitle: projects.length > 1 ? p.title : null, last: i == updates.take(4).length - 1),
+              ],
+            ),
+          ),
+        SectionTitle(
+          'Support requests',
+          action: tickets.isEmpty ? null : 'All tickets',
+          onAction: () => context.go('/client/support'),
+        ),
+        if (tickets.isEmpty)
+          const _Placeholder(icon: LucideIcons.lifeBuoy, text: "You have no support requests. We're here if anything comes up.")
+        else
+          for (final t in (open.isNotEmpty ? open : tickets).take(3)) ...[TicketTile(ticket: t), const SizedBox(height: 10)],
+        const SizedBox(height: 18),
+        AppCard(
+          onTap: () => context.push('/consultation'),
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: context.palette.brand.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: Icon(LucideIcons.sparkles, size: 19, color: context.palette.brand),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StatGrid(children: [
-                      StatTile(
-                        icon: LucideIcons.briefcase,
-                        label: 'Active projects',
-                        value: '${active.length}',
-                        detail: projects.length > active.length ? '${projects.length - active.length} closed' : null,
-                        onTap: () => context.go('/client/projects'),
-                      ),
-                      StatTile(
-                        icon: LucideIcons.lifeBuoy,
-                        label: 'Open tickets',
-                        value: '${open.length}',
-                        highlight: urgent > 0,
-                        detail: urgent > 0 ? '$urgent high priority' : '${tickets.length} in total',
-                        onTap: () => context.go('/client/support'),
-                      ),
-                      StatTile(
-                        icon: LucideIcons.fileText,
-                        label: 'Shared documents',
-                        value: '${projects.fold(0, (n, p) => n + p.documents.length)}',
-                      ),
-                      StatTile(
-                        icon: LucideIcons.calendarClock,
-                        label: 'Next target date',
-                        value: deadlines.isEmpty ? '—' : formatDate(deadlines.first),
-                      ),
-                    ]),
-                    SectionTitle(
-                      'Your projects',
-                      action: projects.isEmpty ? null : 'All projects',
-                      onAction: () => context.go('/client/projects'),
-                    ),
-                    if (projects.isEmpty)
-                      const EmptyState(
-                        icon: LucideIcons.briefcase,
-                        title: 'No projects are linked to your account yet.',
-                        message: "If you're a Novatrix client, ask your project lead to add this email address "
-                            'to your project. You can still raise support requests.',
-                      )
-                    else
-                      for (final p in (active.isEmpty ? projects : active).take(4)) ...[
-                        ProjectCard(project: p),
-                        const SizedBox(height: 12),
-                      ],
-                    const SectionTitle('Latest updates'),
-                    if (updates.isEmpty)
-                      Text("Your project team's updates will appear here.", style: context.text.bodySmall)
-                    else
-                      for (final (u, p) in updates.take(5)) ...[
-                        UpdateTile(update: u, projectTitle: p.title),
-                        const SizedBox(height: 10),
-                      ],
-                    SectionTitle(
-                      'Support requests',
-                      action: tickets.isEmpty ? null : 'All tickets',
-                      onAction: () => context.go('/client/support'),
-                    ),
-                    if (tickets.isEmpty)
-                      Text('You have no support tickets.', style: context.text.bodySmall)
-                    else
-                      for (final t in tickets.take(4)) ...[TicketTile(ticket: t), const SizedBox(height: 10)],
+                    Text('Planning something new?', style: context.text.labelLarge),
+                    Text('Request a consultation for your next project.', style: context.text.bodySmall),
                   ],
-                );
-              },
+                ),
+              ),
+              Icon(LucideIcons.chevronRight, size: 18, color: context.palette.mutedForeground),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The gradient banner: the project that needs attention soonest, and where it is.
+class _ProjectBanner extends StatelessWidget {
+  const _ProjectBanner({required this.project});
+  final ClientProject project;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final white = Colors.white;
+    final pr = project;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+      decoration: BoxDecoration(gradient: p.gradient, borderRadius: BorderRadius.circular(18)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(pr.organization.toUpperCase(),
+                        style: context.text.labelSmall?.copyWith(
+                            color: white.withValues(alpha: 0.85), letterSpacing: 1.4, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 4),
+                    Text(pr.title, style: context.text.headlineSmall?.copyWith(color: white)),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(color: white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(99)),
+                child: Text(pr.statusDisplay,
+                    style: context.text.labelSmall?.copyWith(color: white, fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          StageTracker(project: pr, onBrand: true),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Icon(LucideIcons.calendarClock, size: 15, color: white.withValues(alpha: 0.9)),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  pr.targetEndDate != null ? 'Target ${formatDate(pr.targetEndDate)}' : 'Dates to be confirmed',
+                  style: context.text.bodySmall?.copyWith(color: white.withValues(alpha: 0.9)),
+                ),
+              ),
+              Material(
+                color: white,
+                borderRadius: BorderRadius.circular(10),
+                child: InkWell(
+                  key: const ValueKey('open-focus-project'),
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () => context.go('/client/projects/${pr.id}'),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Open project', style: context.text.labelLarge?.copyWith(color: p.brand)),
+                        const SizedBox(width: 4),
+                        Icon(LucideIcons.chevronRight, size: 16, color: p.brand),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NoProjectBanner extends StatelessWidget {
+  const _NoProjectBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    final white = Colors.white;
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(gradient: context.palette.gradient, borderRadius: BorderRadius.circular(18)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(LucideIcons.briefcase, color: white),
+          const SizedBox(height: 12),
+          Text('No project linked yet', style: context.text.titleLarge?.copyWith(color: white)),
+          const SizedBox(height: 6),
+          Text(
+            "If you're a Novatrix client, ask your project lead to add this email address to your project. "
+            'You can still raise support requests.',
+            style: context.text.bodySmall?.copyWith(color: white.withValues(alpha: 0.9), height: 1.4),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickActions extends StatelessWidget {
+  const _QuickActions();
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final actions = [
+      (LucideIcons.messageSquarePlus, 'New request', () => context.go('/client/support/new')),
+      (LucideIcons.briefcase, 'Projects', () => context.go('/client/projects')),
+      (LucideIcons.lifeBuoy, 'Support', () => context.go('/client/support')),
+      (LucideIcons.sparkles, 'Consult', () => context.push('/consultation')),
+    ];
+    return Row(
+      children: [
+        for (final (icon, label, onTap) in actions)
+          Expanded(
+            child: Semantics(
+              button: true,
+              label: label,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(14),
+                onTap: onTap,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: p.brand.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(icon, color: p.brand, size: 22),
+                      ),
+                      const SizedBox(height: 6),
+                      ExcludeSemantics(
+                        child: Text(label, style: context.text.labelMedium, textAlign: TextAlign.center),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
+          ),
+      ],
+    );
+  }
+}
+
+class _Count extends StatelessWidget {
+  const _Count({required this.icon, required this.value, required this.label, this.warning = false, this.onTap});
+
+  final IconData icon;
+  final int value;
+  final String label;
+  final bool warning;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final tint = warning ? p.warning : p.brand;
+    return Expanded(
+      child: AppCard(
+        onTap: onTap,
+        highlight: warning ? p.warning.withValues(alpha: 0.6) : null,
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 17, color: tint),
+            const SizedBox(height: 8),
+            Text('$value', style: context.text.headlineSmall),
+            Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.text.bodySmall),
           ],
         ),
       ),
     );
   }
+}
+
+/// One project update in the timeline.
+class _UpdateRow extends StatelessWidget {
+  const _UpdateRow({required this.update, required this.last, this.projectTitle});
+
+  final ProjectUpdate update;
+  final String? projectTitle;
+  final bool last;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(gradient: p.gradient, shape: BoxShape.circle),
+              ),
+              if (!last) Expanded(child: Container(width: 2, color: p.brand.withValues(alpha: 0.15))),
+            ],
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text([timeAgo(update.createdAt), ?projectTitle].join(' · '), style: context.text.bodySmall),
+                  const SizedBox(height: 2),
+                  Text(update.title, style: context.text.labelLarge),
+                  if (update.body.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(update.body, maxLines: 3, overflow: TextOverflow.ellipsis,
+                        style: context.text.bodySmall?.copyWith(height: 1.4)),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Placeholder extends StatelessWidget {
+  const _Placeholder({required this.icon, required this.text});
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => AppCard(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: context.palette.mutedForeground),
+            const SizedBox(width: 10),
+            Expanded(child: Text(text, style: context.text.bodySmall)),
+          ],
+        ),
+      );
 }
 
 class ProjectCard extends StatelessWidget {

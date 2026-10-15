@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Push notifications: the channel people see in Android settings, and the icon tint. -->
+    <string name="notification_channel_id" translatable="false">novatrix_updates</string>
+    <string name="notification_channel_name">Novatrix updates</string>
+    <string name="notification_channel_description">Assignment feedback, course announcements, and support request updates.</string>
+    <color name="notification_color">#981DEB</color>
+</resources>

@@ -12,6 +12,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/widgets/form_fields.dart';
 import '../../core/widgets/widgets.dart';
 import '../../data/models/user.dart';
+import '../../data/site_content.dart';
 import '../learner/learner_screens.dart' show LearningTotals;
 import '../shell/app_shell.dart';
 import '../shell/workspace.dart';
@@ -22,12 +23,11 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(sessionProvider).value;
-    if (session == null) return const Scaffold(body: LoadingView());
+    if (session == null) return const _GuestProfile();
     final user = session.user;
     final roles = session.roles;
     final workspace = Workspace.forPath('/profile', roles);
     final areas = Workspace.available(roles);
-    final p = context.palette;
 
     return Scaffold(
       appBar: WorkspaceAppBar(workspace: workspace),
@@ -104,62 +104,7 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ],
             const SectionTitle('Settings'),
-            AppCard(
-              padding: EdgeInsets.zero,
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(LucideIcons.keyRound),
-                    title: const Text('Change password'),
-                    trailing: const Icon(LucideIcons.chevronRight, size: 18),
-                    onTap: () => context.go('/profile/password'),
-                  ),
-                  const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Appearance', style: context.text.titleMedium),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: double.infinity,
-                          child: SegmentedButton<ThemeMode>(
-                            showSelectedIcon: false,
-                            style: SegmentedButton.styleFrom(
-                              selectedBackgroundColor: p.brand,
-                              selectedForegroundColor: Colors.white,
-                              side: BorderSide(color: p.border),
-                            ),
-                            segments: const [
-                              ButtonSegment(value: ThemeMode.system, label: Text('System'), icon: Icon(LucideIcons.monitor, size: 16)),
-                              ButtonSegment(value: ThemeMode.light, label: Text('Light'), icon: Icon(LucideIcons.sun, size: 16)),
-                              ButtonSegment(value: ThemeMode.dark, label: Text('Dark'), icon: Icon(LucideIcons.moon, size: 16)),
-                            ],
-                            selected: {ref.watch(themeModeProvider)},
-                            onSelectionChanged: (s) => ref.read(themeModeProvider.notifier).set(s.first),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(LucideIcons.globe),
-                    title: const Text('Explore Novatrix'),
-                    trailing: const Icon(LucideIcons.chevronRight, size: 18),
-                    onTap: () => context.go('/'),
-                  ),
-                  const Divider(),
-                  ListTile(
-                    leading: const Icon(LucideIcons.shieldCheck),
-                    title: const Text('Privacy Policy'),
-                    trailing: const Icon(LucideIcons.externalLink, size: 16),
-                    onTap: () => openLink(context, '${AppConfig.siteUrl}/legal/privacy-policy'),
-                  ),
-                ],
-              ),
-            ),
+            const _SettingsCard(signedIn: true),
             const SizedBox(height: 20),
             SecondaryButton(
               label: 'Log out',
@@ -169,8 +114,174 @@ class ProfileScreen extends ConsumerWidget {
                 if (context.mounted) context.go('/');
               },
             ),
+            const SizedBox(height: 8),
+            Center(
+              child: TextButton(
+                onPressed: () => context.go('/profile/delete'),
+                style: TextButton.styleFrom(foregroundColor: context.palette.destructive),
+                child: const Text('Delete my account'),
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The Profile tab before signing in: log in or sign up, and the settings that work without an account.
+class _GuestProfile extends StatelessWidget {
+  const _GuestProfile();
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    return Scaffold(
+      appBar: const WorkspaceAppBar(workspace: Workspace.public),
+      body: ListView(
+        padding: pagePadding,
+        children: [
+          AppCard(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(color: p.brand.withValues(alpha: 0.1), shape: BoxShape.circle),
+                  child: Icon(LucideIcons.userRound, size: 32, color: p.brand),
+                ),
+                const SizedBox(height: 14),
+                Text('Welcome to Novatrix', style: context.text.titleLarge, textAlign: TextAlign.center),
+                const SizedBox(height: 6),
+                Text(
+                  'Log in to see your courses, progress, certificates, and projects.',
+                  textAlign: TextAlign.center,
+                  style: context.text.bodySmall,
+                ),
+                const SizedBox(height: 18),
+                GradientButton(
+                  key: const ValueKey('guest-login'),
+                  label: 'Log in',
+                  icon: LucideIcons.logIn,
+                  onPressed: () => context.go('/login'),
+                ),
+                const SizedBox(height: 10),
+                SecondaryButton(label: 'Create account', onPressed: () => context.push('/signup')),
+              ],
+            ),
+          ),
+          const SectionTitle('Settings'),
+          const _SettingsCard(signedIn: false),
+          const SectionTitle('Help'),
+          AppCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(LucideIcons.briefcase),
+                  title: const Text('Client login'),
+                  subtitle: const Text('Projects, documents, and support'),
+                  trailing: const Icon(LucideIcons.chevronRight, size: 18),
+                  onTap: () => context.go('/login?as=client'),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(LucideIcons.mail),
+                  title: const Text('Contact us'),
+                  subtitle: const Text(AppConfig.supportEmail),
+                  trailing: const Icon(LucideIcons.externalLink, size: 16),
+                  onTap: () => openLink(context, 'mailto:${AppConfig.supportEmail}'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Appearance and links; with an account, also changing the password.
+class _SettingsCard extends ConsumerWidget {
+  const _SettingsCard({required this.signedIn});
+  final bool signedIn;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final p = context.palette;
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          if (signedIn) ...[
+            ListTile(
+              leading: const Icon(LucideIcons.keyRound),
+              title: const Text('Change password'),
+              trailing: const Icon(LucideIcons.chevronRight, size: 18),
+              onTap: () => context.go('/profile/password'),
+            ),
+            const Divider(),
+          ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Appearance', style: context.text.titleMedium),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: SegmentedButton<ThemeMode>(
+                    showSelectedIcon: false,
+                    style: SegmentedButton.styleFrom(
+                      selectedBackgroundColor: p.brand,
+                      selectedForegroundColor: Colors.white,
+                      side: BorderSide(color: p.border),
+                    ),
+                    segments: const [
+                      ButtonSegment(value: ThemeMode.system, label: Text('System'), icon: Icon(LucideIcons.monitor, size: 16)),
+                      ButtonSegment(value: ThemeMode.light, label: Text('Light'), icon: Icon(LucideIcons.sun, size: 16)),
+                      ButtonSegment(value: ThemeMode.dark, label: Text('Dark'), icon: Icon(LucideIcons.moon, size: 16)),
+                    ],
+                    selected: {ref.watch(themeModeProvider)},
+                    onSelectionChanged: (s) => ref.read(themeModeProvider.notifier).set(s.first),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(LucideIcons.globe),
+            title: const Text('Explore Novatrix'),
+            trailing: const Icon(LucideIcons.chevronRight, size: 18),
+            onTap: () => context.go('/'),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(LucideIcons.info),
+            title: const Text('About Novatrix'),
+            trailing: const Icon(LucideIcons.chevronRight, size: 18),
+            onTap: () => context.push('/about'),
+          ),
+          const Divider(),
+          ExpansionTile(
+            leading: const Icon(LucideIcons.shieldCheck),
+            title: const Text('Legal and policies'),
+            shape: const Border(),
+            collapsedShape: const Border(),
+            children: [
+              for (final (title, path) in SiteContent.policies)
+                ListTile(
+                  contentPadding: const EdgeInsets.only(left: 56, right: 16),
+                  title: Text(title, style: context.text.bodyMedium),
+                  trailing: const Icon(LucideIcons.externalLink, size: 16),
+                  onTap: () => openLink(context, '${AppConfig.siteUrl}$path'),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -448,6 +559,152 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
             GradientButton(label: 'Update password', busy: _busy, onPressed: _save),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Lets someone ask for their account and personal data to be deleted (required by the app stores).
+class DeleteAccountScreen extends ConsumerStatefulWidget {
+  const DeleteAccountScreen({super.key});
+
+  @override
+  ConsumerState<DeleteAccountScreen> createState() => _DeleteAccountScreenState();
+}
+
+class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
+  final _reason = TextEditingController();
+  final _confirm = TextEditingController();
+  bool _busy = false;
+  bool _sent = false;
+  String? _sentTo;
+  String? _error;
+
+  @override
+  void dispose() {
+    _reason.dispose();
+    _confirm.dispose();
+    super.dispose();
+  }
+
+  bool get _confirmed => _confirm.text.trim().toUpperCase() == 'DELETE';
+
+  Future<void> _submit() async {
+    final user = ref.read(sessionProvider).value?.user;
+    if (user == null) return;
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await ref.read(authRepositoryProvider).requestAccountDeletion(user, reason: _reason.text);
+      _sentTo = user.email;
+      await ref.read(sessionProvider.notifier).logout();
+      if (mounted) setState(() => _sent = true);
+    } on ApiException catch (e) {
+      setState(() => _error = e.message);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Delete account')),
+      body: ListView(
+        padding: pagePadding,
+        children: [
+          if (_sent)
+            EmptyState(
+              icon: LucideIcons.circleCheck,
+              title: 'Your request has been sent.',
+              message: "We'll delete your account and personal data and confirm by email to $_sentTo. "
+                  "You've been signed out of the app.",
+              action: SecondaryButton(label: 'Back to home', expand: false, onPressed: () => context.go('/')),
+            )
+          else if (ref.watch(sessionProvider).value == null)
+            EmptyState(
+              icon: LucideIcons.logIn,
+              title: 'Log in to delete your account.',
+              action: GradientButton(label: 'Log in', expand: false, onPressed: () => context.go('/login?from=/profile/delete')),
+            )
+          else ...[
+            Text('Delete your Novatrix account', style: context.text.headlineSmall),
+            const SizedBox(height: 10),
+            Text(
+              'This asks The Novatrix to permanently delete your account and the personal data linked to it. '
+              'It applies to the website too, as they share one account.',
+              style: context.text.bodyMedium?.copyWith(color: p.mutedForeground, height: 1.45),
+            ),
+            const SizedBox(height: 16),
+            AppCard(
+              highlight: p.destructive.withValues(alpha: 0.5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('You will lose access to:', style: context.text.labelLarge),
+                  const SizedBox(height: 8),
+                  for (final item in const [
+                    'Your courses, progress, and assignment feedback',
+                    'Your certificates in the app (save copies first)',
+                    'Your client projects, documents, and support history',
+                  ])
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(LucideIcons.x, size: 16, color: p.destructive),
+                          const SizedBox(width: 8),
+                          Expanded(child: Text(item, style: context.text.bodyMedium)),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Records we must keep by law, such as payment receipts, are kept only as long as required.',
+                    style: context.text.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (_error != null) ...[ErrorNote(_error!, title: "We couldn't send your request."), const SizedBox(height: 16)],
+            LabeledField(
+              label: 'Why are you leaving?',
+              controller: _reason,
+              optional: true,
+              maxLines: 3,
+              maxLength: 1000,
+            ),
+            const SizedBox(height: 16),
+            LabeledField(
+              label: 'Type DELETE to confirm',
+              controller: _confirm,
+              optional: true,
+              hint: 'DELETE',
+            ),
+            const SizedBox(height: 20),
+            ListenableBuilder(
+              listenable: _confirm,
+              builder: (context, _) => FilledButton.icon(
+                onPressed: _confirmed && !_busy ? _submit : null,
+                style: FilledButton.styleFrom(
+                  backgroundColor: p.destructive,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 52),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                icon: _busy
+                    ? const SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white))
+                    : const Icon(LucideIcons.trash2, size: 18),
+                label: const Text('Request account deletion'),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

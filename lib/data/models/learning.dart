@@ -1,4 +1,5 @@
 import 'course.dart';
+import 'assessment.dart';
 import 'json.dart';
 
 class Resource {
@@ -195,18 +196,28 @@ class LessonOutline {
 }
 
 class ModuleOutline {
-  const ModuleOutline({required this.id, required this.title, this.summary = '', this.lessons = const []});
+  const ModuleOutline({
+    required this.id,
+    required this.title,
+    this.summary = '',
+    this.lessons = const [],
+    this.quizzes = const [],
+  });
 
   final int id;
   final String title;
   final String summary;
   final List<LessonOutline> lessons;
 
+  /// Practice quizzes at the end of the module.
+  final List<AssessmentSummary> quizzes;
+
   factory ModuleOutline.fromJson(Json j) => ModuleOutline(
         id: intOf(j['id']),
         title: str(j['title']),
         summary: str(j['summary']),
         lessons: jsonList(j['lessons']).map(LessonOutline.fromJson).toList(),
+        quizzes: jsonList(j['quizzes']).map(AssessmentSummary.fromJson).toList(),
       );
 }
 
@@ -240,9 +251,13 @@ class LearnCourse {
     this.cohort,
     this.announcements = const [],
     this.resources = const [],
+    this.finalExam,
   });
 
   final CourseRef course;
+
+  /// Passing it is required for the certificate. Null when the course has none.
+  final AssessmentSummary? finalExam;
   final String role;
   final List<ModuleOutline> modules;
   final String? enrollmentStatus;
@@ -267,6 +282,7 @@ class LearnCourse {
       cohort: enrollment?['cohort'] is Map ? Cohort.fromJson(jsonOf(enrollment!['cohort'])) : null,
       announcements: jsonList(j['announcements']).map(Announcement.fromJson).toList(),
       resources: jsonList(j['resources']).map(Resource.fromJson).toList(),
+      finalExam: j['final_exam'] is Map ? AssessmentSummary.fromJson(jsonOf(j['final_exam'])) : null,
     );
   }
 }

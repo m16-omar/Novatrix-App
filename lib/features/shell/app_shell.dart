@@ -7,36 +7,84 @@ import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 import '../../data/models/user.dart';
+import '../notifications/notifications_screen.dart';
 import 'workspace.dart' as ws;
 
-/// Bottom navigation that follows the area the current page belongs to.
-class AppShell extends ConsumerWidget {
+/// Bottom navigation for the area the person is in. Signed in, it's always their own area's bar
+/// (learning, teaching, or client), also on shared pages like Home; signed out, the public bar.
+class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key, required this.location, required this.child});
 
   final String location;
   final Widget child;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends ConsumerState<AppShell> {
+  /// The area the person was last in, so someone who both learns and teaches keeps their bar on
+  /// shared pages.
+  ws.Workspace? _lastArea;
+
+  @override
+  Widget build(BuildContext context) {
     final session = ref.watch(sessionProvider).value;
     final roles = session?.roles;
-    final workspace = ws.Workspace.forPath(location, roles);
+    final location = widget.location;
+    final here = ws.Workspace.forPath(location, roles);
+    if (session == null) {
+      _lastArea = null;
+    } else if (here != ws.Workspace.public && !location.startsWith('/profile')) {
+      _lastArea = here;
+    }
+    final workspace = ws.barWorkspaceFor(location, roles, lastArea: _lastArea);
     final tabs = ws.tabsFor(workspace, signedIn: session != null);
-    final index = ws.tabIndexFor(tabs, location);
+    final match = ws.matchingTab(tabs, location);
+    final p = context.palette;
+
+    Widget bar = NavigationBar(
+      selectedIndex: match ?? 0,
+      onDestinationSelected: (i) => context.go(tabs[i].path),
+      destinations: [
+        for (final tab in tabs)
+          NavigationDestination(
+            icon: _withBadge(tab, roles, Icon(tab.icon)),
+            selectedIcon: _withBadge(tab, roles, Icon(tab.icon, color: match == null ? null : p.brand)),
+            label: tab.label,
+            tooltip: tab.label,
+          ),
+      ],
+    );
+    if (match == null) {
+      // A shared page that isn't one of these tabs: show none of them as selected. (The bar
+      // always selects one, so the selected one is drawn like the others.)
+      final theme = Theme.of(context);
+      final base = theme.navigationBarTheme;
+      bar = Theme(
+        data: theme.copyWith(
+          navigationBarTheme: base.copyWith(
+            labelTextStyle: WidgetStatePropertyAll(
+              base.labelTextStyle?.resolve(const <WidgetState>{}),
+            ),
+            iconTheme: WidgetStatePropertyAll(base.iconTheme?.resolve(const <WidgetState>{})),
+          ),
+        ),
+        child: bar,
+      );
+    }
+
+    // While a quiz or exam is open, leaving goes through its own "Leave for now?" question.
+    if (ws.isFocusedPath(location)) return widget.child;
 
     return Scaffold(
-      body: child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: index,
-        onDestinationSelected: (i) => context.go(tabs[i].path),
-        destinations: [
-          for (final tab in tabs)
-            NavigationDestination(
-              icon: _withBadge(tab, roles, Icon(tab.icon)),
-              label: tab.label,
-              tooltip: tab.label,
-            ),
-        ],
+      body: widget.child,
+      bottomNavigationBar: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: p.border)),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 12, offset: const Offset(0, -2))],
+        ),
+        child: bar,
       ),
     );
   }
@@ -107,6 +155,7 @@ class WorkspaceAppBar extends ConsumerWidget implements PreferredSizeWidget {
       ),
       actions: [
         ...actions,
+        if (session != null) const NotificationBell(),
         if (session != null)
           Padding(
             padding: const EdgeInsets.only(right: 16),

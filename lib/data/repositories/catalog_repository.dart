@@ -43,6 +43,31 @@ class CatalogRepository {
         'project_description': '${description.trim()}\n\n(Sent from the Novatrix mobile app)',
         'privacy_consent_recorded': true,
       });
+
+  /// A training request, as sent by the website's training inquiry form.
+  Future<void> requestTraining({
+    required bool forOrganization,
+    required String name,
+    required String email,
+    required String phone,
+    required String topic,
+    required String outcome,
+    String organization = '',
+    int participants = 1,
+    String? format,
+  }) =>
+      _api.post<Json>('/services/training-inquiries/', body: {
+        'inquirer_type': forOrganization ? 'corporate' : 'individual',
+        'inquirer_name': name.trim(),
+        if (forOrganization) 'organization': organization.trim(),
+        'email': email.trim(),
+        'phone_or_whatsapp': phone.trim(),
+        'training_topic_custom': topic.trim(),
+        'participant_count': forOrganization ? participants : 1,
+        'desired_outcome': '${outcome.trim()}\n\n(Sent from the Novatrix mobile app)',
+        'preferred_format': ?format,
+        'privacy_consent': true,
+      });
 }
 
 const consultationServices = [
@@ -51,6 +76,13 @@ const consultationServices = [
   ('systems_integration', 'Systems integration'),
   ('support_maintenance', 'Support and optimization'),
   ('other', 'Not sure yet / other'),
+];
+
+const trainingFormats = [
+  ('online', 'Live online'),
+  ('in_person', 'In person'),
+  ('hybrid', 'Hybrid'),
+  ('self_paced', 'Self-paced with mentor reviews'),
 ];
 
 const consultationTimelines = [

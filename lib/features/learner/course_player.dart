@@ -11,6 +11,9 @@ import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/form_fields.dart';
 import '../../core/widgets/widgets.dart';
+import 'lesson_text.dart';
+import 'lesson_video.dart';
+import '../../data/models/assessment.dart';
 import '../../data/models/learning.dart';
 import 'learner_screens.dart' show certificateLink;
 
@@ -179,12 +182,89 @@ class _Outline extends StatelessWidget {
                     onTap: () => context.go('/learn/course/$slug/lesson/${l.id}'),
                   ),
                 ],
+                for (final (i, q) in m.quizzes.indexed) ...[
+                  if (i > 0 || m.lessons.isNotEmpty) const Divider(),
+                  ListTile(
+                    key: ValueKey('quiz-${q.id}'),
+                    leading: q.passed
+                        ? Icon(LucideIcons.circleCheck, color: p.success)
+                        : Icon(LucideIcons.listChecks, color: p.brand),
+                    title: Text(q.title),
+                    subtitle: Text([
+                      'Quiz',
+                      q.facts,
+                      if (q.bestScore != null) 'Best ${q.bestScore}%',
+                    ].join(' · ')),
+                    trailing: const Icon(LucideIcons.chevronRight, size: 18),
+                    onTap: () => context.push('/learn/course/$slug/assessment/${q.id}'),
+                  ),
+                ],
               ],
             ),
           ),
           const SizedBox(height: 8),
         ],
+        if (course.finalExam case final exam?) ...[
+          const SectionTitle('Final exam'),
+          _FinalExamCard(slug: slug, exam: exam),
+        ],
       ],
+    );
+  }
+}
+
+class _FinalExamCard extends StatelessWidget {
+  const _FinalExamCard({required this.slug, required this.exam});
+  final String slug;
+  final AssessmentSummary exam;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final status = exam.passed
+        ? 'Passed with ${exam.bestScore}%'
+        : exam.openAttemptId != null
+            ? 'In progress: finish before the time runs out'
+            : exam.attemptsUsed > 0
+                ? 'Best ${exam.bestScore}% · ${exam.attemptsLeft ?? '∞'} attempts left'
+                : 'Not taken yet';
+    return AppCard(
+      key: const ValueKey('final-exam'),
+      highlight: exam.passed ? p.success.withValues(alpha: 0.5) : p.brand.withValues(alpha: 0.4),
+      onTap: () => context.push('/learn/course/$slug/assessment/${exam.id}'),
+      child: Row(
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              gradient: exam.passed ? null : p.gradient,
+              color: exam.passed ? p.success.withValues(alpha: 0.15) : null,
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Icon(exam.passed ? LucideIcons.badgeCheck : LucideIcons.graduationCap,
+                color: exam.passed ? p.success : Colors.white),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(exam.title, style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 2),
+                Text(exam.facts, style: context.text.bodySmall),
+                const SizedBox(height: 4),
+                Text(status, style: context.text.labelMedium?.copyWith(color: exam.passed ? p.success : p.brand)),
+                if (!exam.passed) ...[
+                  const SizedBox(height: 4),
+                  Text('Required for your certificate.', style: context.text.bodySmall),
+                ],
+              ],
+            ),
+          ),
+          const Icon(LucideIcons.chevronRight, size: 18),
+        ],
+      ),
     );
   }
 }
@@ -201,7 +281,7 @@ class LessonScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.go('/learn/course/$slug')),
-        title: Text(ref.watch(lessonProvider(key)).value?.moduleTitle ?? 'Lesson'),
+        // The module and lesson titles are on the page itself, under the video.
       ),
       body: AsyncBody(
         provider: lessonProvider(key),
@@ -247,107 +327,212 @@ class _LessonBodyState extends ConsumerState<_LessonBody> {
   Widget build(BuildContext context) {
     final lesson = widget.lesson;
     final p = context.palette;
-    return ListView(
-      padding: pagePadding,
+    final text = lessonMarkdown(lesson.content, title: lesson.title);
+    final heading = context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700, height: 1.3);
+    return Column(
       children: [
-        Wrap(
-          spacing: 8,
-          children: [
-            Pill(lesson.kind.label),
-            if (lesson.durationMinutes > 0) Pill('${lesson.durationMinutes} min'),
-            if (lesson.completed) const Pill('Completed', tone: PillTone.success),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(lesson.title, style: context.text.headlineSmall),
-        const SizedBox(height: 16),
-        if (lesson.videoUrl.isNotEmpty) ...[
-          AppCard(
-            onTap: () => openLink(context, lesson.videoUrl),
-            padding: EdgeInsets.zero,
-            child: Container(
-              height: 180,
-              decoration: BoxDecoration(gradient: p.gradient),
-              alignment: Alignment.center,
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+            children: [
+              if (lesson.videoUrl.isNotEmpty) ...[
+                LessonVideo(url: lesson.videoUrl, durationMinutes: lesson.durationMinutes),
+                const SizedBox(height: 18),
+              ],
+              if (lesson.moduleTitle.isNotEmpty) ...[
+                Eyebrow(lesson.moduleTitle),
+                const SizedBox(height: 6),
+              ],
+              Text(lesson.title, style: context.text.headlineSmall?.copyWith(height: 1.2)),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 14,
+                runSpacing: 6,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  Icon(LucideIcons.circlePlay, color: Colors.white, size: 56),
-                  SizedBox(height: 8),
-                  Text('Watch the video', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                  _Meta(icon: _kindIcon(lesson.kind), label: lesson.kind.label),
+                  if (lesson.durationMinutes > 0) _Meta(icon: LucideIcons.clock, label: '${lesson.durationMinutes} min'),
+                  if (lesson.completed) const Pill('Completed', tone: PillTone.success),
                 ],
               ),
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
-        if (lesson.content.isNotEmpty)
-          MarkdownBody(
-            data: lesson.content,
-            selectable: true,
-            onTapLink: (_, href, _) {
-              if (href != null) openLink(context, href);
-            },
-            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-              p: context.text.bodyLarge?.copyWith(height: 1.55),
-              a: TextStyle(color: p.brand, decoration: TextDecoration.underline),
-              code: context.text.bodyMedium?.copyWith(fontFamily: 'monospace', backgroundColor: p.muted),
-              codeblockDecoration: BoxDecoration(color: p.muted, borderRadius: BorderRadius.circular(12)),
-              blockquoteDecoration: BoxDecoration(
-                border: Border(left: BorderSide(color: p.brand, width: 3)),
-                color: p.muted.withValues(alpha: 0.5),
-              ),
-            ),
-          ),
-        if (lesson.resourceUrl.isNotEmpty) ...[
-          const SizedBox(height: 16),
-          SecondaryButton(
-            label: lesson.kind == LessonKind.live ? 'Join the session' : 'Open resource',
-            icon: LucideIcons.externalLink,
-            onPressed: () => openLink(context, lesson.resourceUrl),
-          ),
-        ],
-        if (lesson.kind == LessonKind.assignment) ...[
-          const SectionTitle('Your submission'),
-          _AssignmentPanel(slug: widget.slug, lesson: lesson, onSubmitted: _refreshCourse),
-        ] else if (lesson.canTrack) ...[
-          const SizedBox(height: 24),
-          lesson.completed
-              ? SecondaryButton(
-                  label: 'Mark as not done',
-                  icon: LucideIcons.refreshCw,
-                  onPressed: _busy ? null : _toggleComplete,
-                )
-              : GradientButton(
-                  label: 'Mark as complete',
-                  icon: LucideIcons.circleCheck,
-                  busy: _busy,
-                  onPressed: _toggleComplete,
+              if (text.isNotEmpty) ...[
+                const SizedBox(height: 14),
+                Divider(color: p.border),
+                const SizedBox(height: 6),
+                MarkdownBody(
+                  data: text,
+                  selectable: true,
+                  onTapLink: (_, href, _) {
+                    if (href != null) openLink(context, href);
+                  },
+                  styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                    p: context.text.bodyLarge?.copyWith(height: 1.6),
+                    pPadding: const EdgeInsets.only(bottom: 4),
+                    h1: context.text.titleLarge,
+                    h2: heading,
+                    h3: heading,
+                    h1Padding: const EdgeInsets.only(top: 18, bottom: 4),
+                    h2Padding: const EdgeInsets.only(top: 18, bottom: 4),
+                    h3Padding: const EdgeInsets.only(top: 18, bottom: 4),
+                    listBullet: context.text.bodyLarge?.copyWith(color: p.brand),
+                    listIndent: 22,
+                    blockSpacing: 10,
+                    strong: const TextStyle(fontWeight: FontWeight.w700),
+                    a: TextStyle(color: p.brand, decoration: TextDecoration.underline),
+                    code: context.text.bodyMedium?.copyWith(fontFamily: 'monospace', backgroundColor: p.muted),
+                    codeblockPadding: const EdgeInsets.all(14),
+                    codeblockDecoration: BoxDecoration(color: p.muted, borderRadius: BorderRadius.circular(12)),
+                    blockquotePadding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                    blockquoteDecoration: BoxDecoration(
+                      border: Border(left: BorderSide(color: p.brand, width: 3)),
+                      color: p.brand.withValues(alpha: 0.06),
+                    ),
+                    horizontalRuleDecoration: BoxDecoration(border: Border(top: BorderSide(color: p.border))),
+                  ),
                 ),
-        ],
-        const SizedBox(height: 24),
-        Row(
-          children: [
-            if (lesson.previousId != null)
-              Expanded(
-                child: SecondaryButton(
-                  label: 'Previous',
-                  icon: LucideIcons.arrowLeft,
-                  onPressed: () => context.go('/learn/course/${widget.slug}/lesson/${lesson.previousId}'),
-                ),
-              ),
-            if (lesson.previousId != null && lesson.nextId != null) const SizedBox(width: 10),
-            if (lesson.nextId != null)
-              Expanded(
-                child: GradientButton(
-                  label: 'Next lesson',
-                  icon: LucideIcons.arrowRight,
-                  onPressed: () => context.go('/learn/course/${widget.slug}/lesson/${lesson.nextId}'),
-                ),
-              ),
-          ],
+              ],
+              if (lesson.resourceUrl.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                _ResourceCard(lesson: lesson),
+              ],
+              if (lesson.kind == LessonKind.assignment) ...[
+                const SectionTitle('Your submission'),
+                _AssignmentPanel(slug: widget.slug, lesson: lesson, onSubmitted: _refreshCourse),
+              ],
+            ],
+          ),
+        ),
+        _LessonActions(
+          lesson: lesson,
+          busy: _busy,
+          onToggleComplete: _toggleComplete,
+          onGo: (id) => context.go('/learn/course/${widget.slug}/lesson/$id'),
         ),
       ],
+    );
+  }
+}
+
+IconData _kindIcon(LessonKind kind) => switch (kind) {
+      LessonKind.video => LucideIcons.circlePlay,
+      LessonKind.assignment => LucideIcons.clipboardCheck,
+      LessonKind.live => LucideIcons.presentation,
+      LessonKind.reading => LucideIcons.fileText,
+    };
+
+class _Meta extends StatelessWidget {
+  const _Meta({required this.icon, required this.label});
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final muted = context.palette.mutedForeground;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 15, color: muted),
+        const SizedBox(width: 5),
+        Text(label, style: context.text.bodySmall?.copyWith(color: muted, fontWeight: FontWeight.w600)),
+      ],
+    );
+  }
+}
+
+/// The lesson's extra link: slides, a dataset, or the live session.
+class _ResourceCard extends StatelessWidget {
+  const _ResourceCard({required this.lesson});
+  final LessonDetail lesson;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final live = lesson.kind == LessonKind.live;
+    final host = Uri.tryParse(lesson.resourceUrl)?.host.replaceFirst('www.', '') ?? '';
+    return AppCard(
+      onTap: () => openLink(context, lesson.resourceUrl),
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(color: p.brand.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+            child: Icon(live ? LucideIcons.video : LucideIcons.bookOpen, size: 20, color: p.brand),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(live ? 'Join the live session' : 'Lesson resource', style: context.text.labelLarge),
+                if (host.isNotEmpty) Text(host, style: context.text.bodySmall),
+              ],
+            ),
+          ),
+          Icon(LucideIcons.externalLink, size: 16, color: p.mutedForeground),
+        ],
+      ),
+    );
+  }
+}
+
+/// Always at the bottom: mark the lesson done, and move to the previous or next one.
+class _LessonActions extends StatelessWidget {
+  const _LessonActions({required this.lesson, required this.busy, required this.onToggleComplete, required this.onGo});
+
+  final LessonDetail lesson;
+  final bool busy;
+  final VoidCallback onToggleComplete;
+  final ValueChanged<int> onGo;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final canComplete = lesson.canTrack && lesson.kind != LessonKind.assignment;
+    Widget nav(IconData icon, String label, int? id) => IconButton.outlined(
+          tooltip: label,
+          onPressed: id == null ? null : () => onGo(id),
+          style: IconButton.styleFrom(
+            side: BorderSide(color: p.border),
+            minimumSize: const Size(48, 48),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+          icon: Icon(icon, size: 20),
+        );
+    return DecoratedBox(
+      decoration: BoxDecoration(color: p.background, border: Border(top: BorderSide(color: p.border))),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Row(
+          children: [
+            nav(LucideIcons.arrowLeft, 'Previous lesson', lesson.previousId),
+            const SizedBox(width: 10),
+            Expanded(
+              child: canComplete
+                  ? (lesson.completed
+                      ? SecondaryButton(
+                          label: 'Completed',
+                          icon: LucideIcons.circleCheck,
+                          onPressed: busy ? null : onToggleComplete,
+                        )
+                      : GradientButton(
+                          label: 'Mark as complete',
+                          icon: LucideIcons.circleCheck,
+                          busy: busy,
+                          onPressed: onToggleComplete,
+                        ))
+                  : GradientButton(
+                      label: lesson.nextId == null ? 'Back to course' : 'Next lesson',
+                      icon: LucideIcons.arrowRight,
+                      onPressed: lesson.nextId == null ? () => Navigator.of(context).maybePop() : () => onGo(lesson.nextId!),
+                    ),
+            ),
+            const SizedBox(width: 10),
+            nav(LucideIcons.arrowRight, 'Next lesson', lesson.nextId),
+          ],
+        ),
+      ),
     );
   }
 }

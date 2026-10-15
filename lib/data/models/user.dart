@@ -39,18 +39,55 @@ class Profile {
 }
 
 class User {
-  const User({required this.id, required this.email, this.dateJoined, this.profile = const Profile()});
+  const User({
+    required this.id,
+    required this.email,
+    this.dateJoined,
+    this.profile = const Profile(),
+    this.emailVerified = true,
+    this.isStaff = false,
+  });
 
   final int id;
   final String email;
   final DateTime? dateJoined;
   final Profile profile;
 
+  /// False until the address is confirmed with the code emailed at sign-up.
+  final bool emailVerified;
+  final bool isStaff;
+
+  /// Learners and clients confirm their email before using their areas. Staff accounts are created
+  /// internally and skip it, as on the backend.
+  bool get needsEmailVerification => !emailVerified && !isStaff;
+
   factory User.fromJson(Json j) => User(
         id: intOf(j['id']),
         email: str(j['email']),
         dateJoined: dateOf(j['date_joined']),
         profile: j['profile'] is Map ? Profile.fromJson(jsonOf(j['profile'])) : const Profile(),
+        // Older backends don't send the flag: treat their accounts as confirmed.
+        emailVerified: j['is_email_verified'] == null || boolOf(j['is_email_verified']),
+        isStaff: boolOf(j['is_staff']),
+      );
+
+  /// The same shape as the API's user, so a saved copy reads back through [User.fromJson].
+  Json toJson() => {
+        'id': id,
+        'email': email,
+        'date_joined': dateJoined?.toUtc().toIso8601String(),
+        'profile': profile.toJson(),
+        'is_email_verified': emailVerified,
+        'is_staff': isStaff,
+      };
+
+  User copyWith({Profile? profile, bool? emailVerified}) => User(
+        id: id,
+        email: email,
+        dateJoined: dateJoined,
+        profile: profile ?? this.profile,
+        emailVerified: emailVerified ?? this.emailVerified,
+        isStaff: isStaff,
       );
 
   String get firstName => profile.firstName.isNotEmpty ? profile.firstName : email.split('@').first;
@@ -89,6 +126,16 @@ class Roles {
   final int openTickets;
 
   static const none = Roles();
+
+  Json toJson() => {
+        'is_facilitator': isFacilitator,
+        'facilitated_courses': facilitatedCourses,
+        'enrolled_courses': enrolledCourses,
+        'has_client_projects': hasClientProjects,
+        'pending_reviews': pendingReviews,
+        'client_projects': clientProjects,
+        'open_tickets': openTickets,
+      };
 
   factory Roles.fromJson(Json j) => Roles(
         isFacilitator: boolOf(j['is_facilitator']),

@@ -44,6 +44,11 @@ dependencies:
   intl: ^0.20.3
   shared_preferences: ^2.5.5
   flutter_markdown_plus: ^1.0.12
+  firebase_core: ^4.15.0
+  firebase_messaging: ^16.7.0
+  youtube_player_iframe: ^6.0.2
+  video_player: ^2.11.1
+  webview_flutter: ^4.14.1
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +64,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.7
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,6 +80,9 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/content/
+    # Inter and Space Grotesk, bundled so text looks right offline (google_fonts uses these files).
+    - assets/google_fonts/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -104,3 +114,28 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Native launch screen, shown before Flutter starts. Regenerate with:
+#   dart run flutter_native_splash:create
+#   cp design/splash/splash-background.png ios/Runner/Assets.xcassets/LaunchBackground.imageset/background.png
+# (the copy keeps the image's sRGB tag, which the generator drops; without it iOS shows the gradient
+# more saturated than the Flutter splash that follows). The generator also reformats ios/Runner/Info.plist:
+# keep the UIApplicationSceneManifest entry it may drop.
+flutter_native_splash:
+  background_image: design/splash/splash-background.png
+  image: design/splash/splash-logo.png
+  android_12:
+    color: "#C028D4"
+    image: design/splash/splash-android12.png
+  fullscreen: false
+
+# App icons, from design/icon/ (the white Novatrix mark on the website's brand gradient).
+# Regenerate with: dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: design/icon/app-icon.png
+  ios: true
+  remove_alpha_ios: true
+  android: true
+  adaptive_icon_background: design/icon/icon-background.png
+  adaptive_icon_foreground: design/icon/icon-foreground.png
+  adaptive_icon_monochrome: design/icon/icon-foreground.png

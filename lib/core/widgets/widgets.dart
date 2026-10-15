@@ -39,13 +39,13 @@ class GradientButton extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: p.gradient,
-            borderRadius: BorderRadius.circular(999),
-            boxShadow: [BoxShadow(color: p.brand.withValues(alpha: 0.35), blurRadius: 24, offset: const Offset(0, 10))],
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [BoxShadow(color: p.brand.withValues(alpha: 0.25), blurRadius: 16, offset: const Offset(0, 6))],
           ),
           child: Material(
             type: MaterialType.transparency,
             child: InkWell(
-              borderRadius: BorderRadius.circular(999),
+              borderRadius: BorderRadius.circular(12),
               onTap: enabled ? onPressed : null,
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: 52, minWidth: expand ? double.infinity : 0),
@@ -188,14 +188,19 @@ class AppCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    return Material(
-      color: p.card,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-        side: BorderSide(color: highlight ?? p.border, width: highlight != null ? 1.5 : 1),
+    final radius = BorderRadius.circular(16);
+    return Container(
+      decoration: BoxDecoration(color: p.card, borderRadius: radius, boxShadow: p.cardShadow),
+      foregroundDecoration: BoxDecoration(
+        borderRadius: radius,
+        border: Border.all(color: highlight ?? p.border, width: highlight != null ? 1.5 : 1),
       ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(onTap: onTap, child: Padding(padding: padding, child: child)),
+      child: Material(
+        type: MaterialType.transparency,
+        borderRadius: radius,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(onTap: onTap, child: Padding(padding: padding, child: child)),
+      ),
     );
   }
 }
@@ -216,26 +221,31 @@ class StatTile extends StatelessWidget {
     return AppCard(
       onTap: onTap,
       highlight: highlight ? p.warning.withValues(alpha: 0.6) : null,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(color: p.muted, shape: BoxShape.circle),
-                child: Icon(icon, size: 15, color: p.brand),
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [p.brand.withValues(alpha: 0.22), p.brand2.withValues(alpha: 0.14)],
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(label, maxLines: 2, style: context.text.bodySmall?.copyWith(height: 1.2)),
-              ),
-            ],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 17, color: p.brand),
           ),
-          const SizedBox(height: 10),
-          Text(value, style: context.text.headlineSmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+          const SizedBox(height: 14),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(value, style: context.text.headlineMedium, maxLines: 1),
+          ),
+          const SizedBox(height: 2),
+          Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.text.labelLarge?.copyWith(color: p.mutedForeground)),
           if (detail != null) ...[
             const SizedBox(height: 2),
             Text(detail!, style: context.text.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis),

@@ -21,3 +21,9 @@ String timeAgo(DateTime? d) {
   if (diff.inDays < 30) return '${plural(diff.inDays, 'day')} ago';
   return formatDate(d);
 }
+
+/// "Good morning", "Good afternoon", or "Good evening", for home screen greetings.
+String greeting([DateTime? now]) {
+  final hour = (now ?? DateTime.now()).hour;
+  return hour < 12 ? 'Good morning' : (hour < 17 ? 'Good afternoon' : 'Good evening');
+}

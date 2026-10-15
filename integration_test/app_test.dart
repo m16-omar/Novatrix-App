@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:novatrix_app/core/network/token_store.dart';
 import 'package:novatrix_app/main.dart' as app;
+import 'package:shared_preferences/shared_preferences.dart';
 
 const email = 'qa-app@example.com';
 const password = 'Qa-Str0ng-pass!';
@@ -67,11 +68,21 @@ void main() {
 
   testWidgets('public site, learning, teaching, client, and profile', (t) async {
     await TokenStore().write(null); // start signed out
+    await (await SharedPreferences.getInstance()).remove('nvx_onboarded'); // and as a first launch
     app.main();
 
+    // Welcome slides
+    await waitFor(t, find.text('Technology that\nworks for you'));
+    await shot(t, '00-welcome');
+    await tapText(t, 'Continue');
+    await waitFor(t, find.text('Connect your\nsystems'));
+    await tapText(t, 'Continue');
+    await waitFor(t, find.text('Get started'));
+    await tapText(t, 'Get started');
+
     // Public
-    await waitFor(t, find.text('Software that works. Systems that scale. Training that lasts.'));
-    await waitFor(t, find.text('Featured courses'));
+    await waitFor(t, find.text('Build better systems.'));
+    await waitFor(t, find.text('Four connected services. One delivery partner.'));
     await shot(t, '01-home');
 
     await tapNav(t, 'Courses');
@@ -83,12 +94,16 @@ void main() {
     await shot(t, '03-course-detail');
 
     // Log in
-    await tapNav(t, 'Log in');
-    await waitFor(t, find.text('Log in as learner'));
+    await tapNav(t, 'Settings');
+    await waitFor(t, find.byKey(const ValueKey('guest-login')));
+    await t.tap(find.byKey(const ValueKey('guest-login')));
+    await settle(t, 300);
+    await waitFor(t, find.text('Welcome back'));
     await shot(t, '04-login');
     await t.enterText(find.byType(TextFormField).at(0), email);
     await t.enterText(find.byType(TextFormField).at(1), password);
-    await tapText(t, 'Log in as learner');
+    await t.tap(find.byKey(const ValueKey('login-submit')));
+    await settle(t, 300);
 
     // Learning
     await waitFor(t, find.text('Welcome back, Ada.'));
@@ -130,7 +145,8 @@ void main() {
     await switchArea(t, 'TEACHING', 'Switch to client dashboard');
     await waitFor(t, find.text('QA School Portal'));
     await shot(t, '11-client-dashboard');
-    await tapText(t, 'QA School Portal');
+    await t.tap(find.byKey(const ValueKey('open-focus-project')));
+    await settle(t, 300);
     await waitFor(t, find.text('Project stage'));
     await shot(t, '12-project');
 
@@ -143,6 +159,6 @@ void main() {
     await tapText(t, 'System');
 
     await tapText(t, 'Log out');
-    await waitFor(t, find.text('Software that works. Systems that scale. Training that lasts.'));
+    await waitFor(t, find.text('Build better systems.'));
   });
 }

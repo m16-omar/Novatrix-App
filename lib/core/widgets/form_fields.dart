@@ -22,6 +22,8 @@ class LabeledField extends StatefulWidget {
     this.errorText,
     this.readOnly = false,
     this.onSubmitted,
+    this.icon,
+    this.showLabel = true,
   });
 
   final String label;
@@ -40,6 +42,12 @@ class LabeledField extends StatefulWidget {
   final bool readOnly;
   final ValueChanged<String>? onSubmitted;
 
+  /// Shown at the start of the field.
+  final IconData? icon;
+
+  /// When false, the label is shown inside the empty field instead of above it.
+  final bool showLabel;
+
   @override
   State<LabeledField> createState() => _LabeledFieldState();
 }
@@ -53,23 +61,25 @@ class _LabeledFieldState extends State<LabeledField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text.rich(
-          TextSpan(
-            text: widget.label,
-            style: context.text.labelLarge,
-            children: [
-              if (widget.optional)
-                TextSpan(text: ' (optional)', style: TextStyle(color: p.mutedForeground, fontWeight: FontWeight.w400))
-              else if (!widget.readOnly)
-                TextSpan(text: ' *', style: TextStyle(color: p.destructive)),
-            ],
+        if (widget.showLabel) ...[
+          Text.rich(
+            TextSpan(
+              text: widget.label,
+              style: context.text.labelLarge,
+              children: [
+                if (widget.optional)
+                  TextSpan(text: ' (optional)', style: TextStyle(color: p.mutedForeground, fontWeight: FontWeight.w400))
+                else if (!widget.readOnly)
+                  TextSpan(text: ' *', style: TextStyle(color: p.destructive)),
+              ],
+            ),
           ),
-        ),
-        if (widget.helper != null) ...[
-          const SizedBox(height: 2),
-          Text(widget.helper!, style: context.text.bodySmall),
+          if (widget.helper != null) ...[
+            const SizedBox(height: 2),
+            Text(widget.helper!, style: context.text.bodySmall),
+          ],
+          const SizedBox(height: 8),
         ],
-        const SizedBox(height: 8),
         TextFormField(
           controller: widget.controller,
           obscureText: widget.obscure && _hidden,
@@ -85,7 +95,10 @@ class _LabeledFieldState extends State<LabeledField> {
                   ? null
                   : (v) => (v == null || v.trim().isEmpty) ? 'Enter ${widget.label.toLowerCase()}.' : null),
           decoration: InputDecoration(
-            hintText: widget.hint,
+            hintText: widget.hint ?? (widget.showLabel ? null : widget.label + (widget.optional ? ' (optional)' : '')),
+            helperText: widget.showLabel ? null : widget.helper,
+            helperMaxLines: 3,
+            prefixIcon: widget.icon == null ? null : Icon(widget.icon, size: 18),
             errorText: widget.errorText,
             errorMaxLines: 3,
             counterText: '',

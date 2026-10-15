@@ -1,0 +1,1639 @@
+{
+ "source": "https://thenovatrix.com",
+ "syncedAt": "2026-10-10",
+ "offerings": [
+  {
+   "slug": "software-development",
+   "path": "/software-development",
+   "name": "Custom Software Development",
+   "eyebrow": "SOFTWARE DEVELOPMENT",
+   "title": "Custom software built around how your organization works.",
+   "metaDescription": "Custom web, mobile, portal, dashboard, automation, and integration solutions designed, built, and supported by Novatrix.",
+   "summary": "Secure, scalable, and user-friendly web, mobile, portal, dashboard, automation, data, and integration solutions tailored to operational needs.",
+   "intro": "We design and build web and mobile applications, portals, dashboards, and automation that fit your workflows, then train your users and support the product after launch.",
+   "audience": "Founders, operations leads, and institutions that need a digital product or workflow solution.",
+   "problem": {
+    "heading": "Off-the-shelf tools rarely fit the way you actually work.",
+    "body": "Teams end up with spreadsheets, manual hand-offs, and disconnected tools. A custom solution is worth building when your process is a differentiator or when existing products cannot meet your requirements.",
+    "points": [
+     "Manual, repetitive work that slows the team down",
+     "Data scattered across spreadsheets and inboxes",
+     "Customers or staff without a simple digital channel",
+     "Existing software that no longer meets your needs"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Web applications",
+     "desc": "Responsive, accessible applications for customers, staff, or partners."
+    },
+    {
+     "title": "Mobile apps",
+     "desc": "Android and iOS apps, or progressive web apps where they fit better."
+    },
+    {
+     "title": "Portals and dashboards",
+     "desc": "Role-based portals and reporting that turn data into decisions."
+    },
+    {
+     "title": "Business automation",
+     "desc": "Workflows, approvals, notifications, and document generation."
+    },
+    {
+     "title": "Data solutions",
+     "desc": "Databases, data pipelines, analytics, and practical AI features."
+    },
+    {
+     "title": "APIs and integrations",
+     "desc": "Connections to payment, identity, messaging, and existing systems."
+    }
+   ],
+   "boundaries": "We confirm the technologies for each project during discovery and only commit to what our team can deliver and support.",
+   "engagementTypes": [
+    {
+     "title": "New build",
+     "desc": "Take an idea from requirements to a launched product."
+    },
+    {
+     "title": "Modernization",
+     "desc": "Rebuild or improve an existing application."
+    },
+    {
+     "title": "Prototype",
+     "desc": "Validate an idea with a clickable prototype or pilot."
+    },
+    {
+     "title": "Maintenance",
+     "desc": "Take over and improve an application already in use."
+    }
+   ],
+   "process": [
+    {
+     "title": "Discover",
+     "desc": "Understand goals, users, workflows, systems, constraints, and success measures."
+    },
+    {
+     "title": "Define",
+     "desc": "Document requirements, scope, deliverables, timeline, responsibilities, risks, and acceptance criteria."
+    },
+    {
+     "title": "Design",
+     "desc": "Create architecture, user journeys, prototypes, data structures, and the implementation plan."
+    },
+    {
+     "title": "Develop or Configure",
+     "desc": "Build the custom solution, or configure and integrate the selected platform."
+    },
+    {
+     "title": "Test",
+     "desc": "Functional, security, usability, accessibility, performance, and user acceptance testing."
+    },
+    {
+     "title": "Train",
+     "desc": "Prepare administrators and users through practical training, documentation, and guided exercises."
+    },
+    {
+     "title": "Launch",
+     "desc": "Deploy, migrate approved data, support go-live, and resolve initial issues."
+    },
+    {
+     "title": "Support and Optimize",
+     "desc": "Monitor, maintain, collect feedback, and introduce improvements."
+    }
+   ],
+   "industries": [
+    "education",
+    "healthcare",
+    "nonprofits",
+    "smes",
+    "public-sector",
+    "media-and-communications"
+   ],
+   "faqs": [
+    {
+     "q": "How long does a typical project take?",
+     "a": "A focused prototype can take a few weeks; a production application usually takes several months. We give you a timeline after discovery, broken into milestones you can review."
+    },
+    {
+     "q": "How is pricing decided?",
+     "a": "We price each engagement after discovery, once the scope, timeline, and responsibilities are clear. You receive a written proposal before any commitment."
+    },
+    {
+     "q": "Who owns the software and data?",
+     "a": "Ownership of code, data, and deliverables is set out in the agreement before work starts. As a default, we propose that you own the solution built for you and all of your data."
+    },
+    {
+     "q": "How do you handle security?",
+     "a": "Security is treated as a requirement from discovery onward: least-privilege access, secure configuration, input validation, dependency updates, and security testing before launch."
+    },
+    {
+     "q": "What happens after launch?",
+     "a": "We train your administrators and users, then offer support and maintenance so the product stays secure and keeps improving."
+    },
+    {
+     "q": "What do you need from us to start?",
+     "a": "A short description of the problem, who will use the solution, and any existing systems or documents. A brief is helpful but not required."
+    }
+   ],
+   "cta": {
+    "label": "Discuss Your Software Project",
+    "form": "project",
+    "service": "custom_software",
+    "heading": "Tell us about the product you need.",
+    "body": "Share the problem, your users, and any constraints. We'll reply with next steps and, where it helps, a short discovery call."
+   }
+  },
+  {
+   "slug": "system-implementation",
+   "path": "/system-implementation",
+   "name": "System Implementation",
+   "eyebrow": "SYSTEM IMPLEMENTATION",
+   "title": "Implementation that goes beyond installation.",
+   "metaDescription": "System implementation services: assessment, selection, configuration, data migration, workflow redesign, testing, training, go-live, and optimization.",
+   "summary": "Assessment, selection, configuration, migration, workflow redesign, integration, testing, go-live, and optimization.",
+   "intro": "Introducing or replacing a system changes how people work. We guide you from assessment and selection through configuration, migration, testing, training, go-live, and optimization.",
+   "audience": "Institutional leaders introducing or replacing a business, education, health, or administrative system.",
+   "problem": {
+    "heading": "Most system projects struggle after the software is installed.",
+    "body": "Unclear requirements, messy data, and untrained users are the usual reasons a new system is under-used. We treat adoption as part of implementation, not an afterthought.",
+    "points": [
+     "Choosing between platforms without clear requirements",
+     "Legacy data that needs cleaning before it can move",
+     "Workflows that must change to benefit from the system",
+     "Staff who need training and support to adopt it"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Needs assessment",
+     "desc": "Current-state review, requirements, and success measures."
+    },
+    {
+     "title": "Platform selection",
+     "desc": "Vendor-neutral comparison against your requirements and budget."
+    },
+    {
+     "title": "Configuration",
+     "desc": "Roles, permissions, workflows, forms, and reports."
+    },
+    {
+     "title": "Data migration",
+     "desc": "Data cleaning, mapping, migration, and reconciliation."
+    },
+    {
+     "title": "Workflow redesign",
+     "desc": "Simplify processes so the system supports the way you work."
+    },
+    {
+     "title": "Training and go-live",
+     "desc": "User training, cut-over planning, and hands-on go-live support."
+    }
+   ],
+   "engagementTypes": [
+    {
+     "title": "System assessment",
+     "desc": "Understand what you need before you buy."
+    },
+    {
+     "title": "Full implementation",
+     "desc": "End-to-end delivery from selection to optimization."
+    },
+    {
+     "title": "Rescue",
+     "desc": "Recover a stalled or under-used implementation."
+    },
+    {
+     "title": "Optimization",
+     "desc": "Improve adoption and value from a system you already run."
+    }
+   ],
+   "process": [
+    {
+     "title": "Assess",
+     "desc": "Review current processes, systems, data, users, and the outcome you need."
+    },
+    {
+     "title": "Configure",
+     "desc": "Set up the selected platform to match your approved workflows and roles."
+    },
+    {
+     "title": "Integrate",
+     "desc": "Connect the system to the applications and data it depends on."
+    },
+    {
+     "title": "Migrate",
+     "desc": "Clean, map, and move approved data with reconciliation checks."
+    },
+    {
+     "title": "Test",
+     "desc": "Verify workflows, permissions, integrations, and data with your users."
+    },
+    {
+     "title": "Train",
+     "desc": "Equip administrators and end users to work confidently in the new system."
+    },
+    {
+     "title": "Launch",
+     "desc": "Plan cut-over, support go-live, and resolve early issues quickly."
+    },
+    {
+     "title": "Optimize",
+     "desc": "Measure adoption, gather feedback, and refine the system over time."
+    }
+   ],
+   "industries": [
+    "education",
+    "healthcare",
+    "nonprofits",
+    "smes",
+    "public-sector"
+   ],
+   "faqs": [
+    {
+     "q": "Do you sell software licenses?",
+     "a": "We are not tied to a vendor. We help you select the platform that fits your requirements and budget, then implement it."
+    },
+    {
+     "q": "Can you move our existing data?",
+     "a": "Yes. We assess data quality first, agree what should move, clean and map it, and reconcile the results with you before go-live."
+    },
+    {
+     "q": "How is pricing decided?",
+     "a": "We price each engagement after discovery, once the scope, timeline, and responsibilities are clear. You receive a written proposal before any commitment."
+    },
+    {
+     "q": "How do you handle security?",
+     "a": "Security is treated as a requirement from discovery onward: least-privilege access, secure configuration, input validation, dependency updates, and security testing before launch."
+    },
+    {
+     "q": "How do you make sure staff actually use the system?",
+     "a": "Training is part of every implementation: role-based sessions for administrators and users, documentation, and support during and after go-live."
+    }
+   ],
+   "cta": {
+    "label": "Schedule a System Assessment",
+    "form": "project",
+    "service": "system_implementation",
+    "heading": "Start with a system assessment.",
+    "body": "Tell us about your current system, the outcome you need, how many people will use it, and your timeline."
+   }
+  },
+  {
+   "slug": "systems-integration",
+   "path": "/systems-integration",
+   "name": "Systems Integration",
+   "eyebrow": "SYSTEMS INTEGRATION",
+   "title": "Connect your applications, data, and workflows.",
+   "metaDescription": "Systems integration: API integration, data exchange, identity, payments, reporting, and legacy integration with quality controls.",
+   "summary": "API integration, data exchange, identity, payments, reporting, and legacy integration.",
+   "intro": "When systems don't talk to each other, people re-enter data and reports disagree. We connect applications so information flows reliably and securely.",
+   "audience": "Organizations running several systems that need to share data or processes.",
+   "problem": {
+    "heading": "Disconnected systems create duplicate work and conflicting numbers.",
+    "body": "Integration removes manual transfers between systems, keeps records consistent, and gives leadership one reliable view of performance.",
+    "points": [
+     "Staff copying data between systems by hand",
+     "Reports that don't match across departments",
+     "Separate logins for every application",
+     "Legacy systems that are hard to connect"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "API integration",
+     "desc": "Design and build secure, documented integrations between applications."
+    },
+    {
+     "title": "Data exchange",
+     "desc": "Scheduled and real-time data synchronization with validation."
+    },
+    {
+     "title": "Identity and access",
+     "desc": "Single sign-on and consistent user management."
+    },
+    {
+     "title": "Payments",
+     "desc": "Integration with approved, hosted payment gateways."
+    },
+    {
+     "title": "Reporting",
+     "desc": "Consolidated reporting across connected systems."
+    },
+    {
+     "title": "Legacy integration",
+     "desc": "Connect older systems through APIs, files, or middleware."
+    }
+   ],
+   "boundaries": "Every integration includes logging, error handling, and monitoring so failures are visible and recoverable.",
+   "engagementTypes": [
+    {
+     "title": "Integration assessment",
+     "desc": "Map systems, data flows, and integration options."
+    },
+    {
+     "title": "Integration build",
+     "desc": "Design, build, test, and document integrations."
+    },
+    {
+     "title": "Integration support",
+     "desc": "Monitor and maintain existing integrations."
+    }
+   ],
+   "process": [
+    {
+     "title": "Discover",
+     "desc": "Understand goals, users, workflows, systems, constraints, and success measures."
+    },
+    {
+     "title": "Define",
+     "desc": "Document requirements, scope, deliverables, timeline, responsibilities, risks, and acceptance criteria."
+    },
+    {
+     "title": "Design",
+     "desc": "Create architecture, user journeys, prototypes, data structures, and the implementation plan."
+    },
+    {
+     "title": "Develop or Configure",
+     "desc": "Build the custom solution, or configure and integrate the selected platform."
+    },
+    {
+     "title": "Test",
+     "desc": "Functional, security, usability, accessibility, performance, and user acceptance testing."
+    },
+    {
+     "title": "Train",
+     "desc": "Prepare administrators and users through practical training, documentation, and guided exercises."
+    },
+    {
+     "title": "Launch",
+     "desc": "Deploy, migrate approved data, support go-live, and resolve initial issues."
+    },
+    {
+     "title": "Support and Optimize",
+     "desc": "Monitor, maintain, collect feedback, and introduce improvements."
+    }
+   ],
+   "industries": [
+    "education",
+    "healthcare",
+    "smes",
+    "public-sector"
+   ],
+   "faqs": [
+    {
+     "q": "What if one of our systems has no API?",
+     "a": "We assess alternatives such as secure file exchange, database-level integration, or middleware, and recommend the most reliable option."
+    },
+    {
+     "q": "How do you keep integrations reliable?",
+     "a": "Integrations are built with validation, retries, logging, and alerts, and are tested against realistic data before launch."
+    },
+    {
+     "q": "How do you handle security?",
+     "a": "Security is treated as a requirement from discovery onward: least-privilege access, secure configuration, input validation, dependency updates, and security testing before launch."
+    },
+    {
+     "q": "How is pricing decided?",
+     "a": "We price each engagement after discovery, once the scope, timeline, and responsibilities are clear. You receive a written proposal before any commitment."
+    }
+   ],
+   "cta": {
+    "label": "Discuss an Integration",
+    "form": "project",
+    "service": "systems_integration",
+    "heading": "Tell us which systems need to connect.",
+    "body": "List the systems involved, the data or processes that should flow between them, and any deadlines."
+   }
+  },
+  {
+   "slug": "support-and-maintenance",
+   "path": "/support-and-maintenance",
+   "name": "Support and System Optimization",
+   "eyebrow": "SUPPORT AND MAINTENANCE",
+   "title": "Keep your systems secure, stable, and improving.",
+   "metaDescription": "Support and maintenance: monitoring, updates, troubleshooting, enhancements, backup, recovery, user assistance, and refresher training.",
+   "summary": "Maintenance, monitoring, updates, issue resolution, enhancements, user assistance, backup, recovery, and refresher training.",
+   "intro": "Launch is the beginning. We maintain, monitor, and improve the systems you rely on, and keep your users confident with ongoing assistance and refresher training.",
+   "audience": "Current and former clients, and organizations that need support for an existing system.",
+   "problem": {
+    "heading": "Unsupported systems become risky and slow over time.",
+    "body": "Without regular updates, monitoring, and backups, small issues grow into outages and security problems. A clear support route keeps the system reliable.",
+    "points": [
+     "No clear route when something breaks",
+     "Security updates that are overdue",
+     "Backups that have never been tested",
+     "New staff who were never trained"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Maintenance and updates",
+     "desc": "Security patches, dependency updates, and platform upgrades."
+    },
+    {
+     "title": "Monitoring",
+     "desc": "Uptime and error monitoring with agreed response routes."
+    },
+    {
+     "title": "Troubleshooting",
+     "desc": "Investigate and resolve issues according to severity."
+    },
+    {
+     "title": "Enhancements",
+     "desc": "Small improvements and new features as needs change."
+    },
+    {
+     "title": "Backup and recovery",
+     "desc": "Automated backups with tested recovery procedures."
+    },
+    {
+     "title": "User assistance",
+     "desc": "Help desk support and refresher training for your team."
+    }
+   ],
+   "boundaries": "Response times and escalation routes are set in your support agreement. Requests are prioritized by severity.",
+   "engagementTypes": [
+    {
+     "title": "Support agreement",
+     "desc": "Ongoing maintenance with agreed response commitments."
+    },
+    {
+     "title": "Health check",
+     "desc": "A one-off review of security, performance, and backups."
+    },
+    {
+     "title": "Enhancement sprint",
+     "desc": "A focused block of improvements to an existing system."
+    }
+   ],
+   "process": [
+    {
+     "title": "Submit",
+     "desc": "Describe the issue, the affected system, and its urgency."
+    },
+    {
+     "title": "Triage",
+     "desc": "We confirm the severity and the right person to handle it."
+    },
+    {
+     "title": "Resolve",
+     "desc": "We investigate, fix, and verify the fix with you."
+    },
+    {
+     "title": "Improve",
+     "desc": "We record the cause and recommend steps to prevent it recurring."
+    }
+   ],
+   "industries": [
+    "education",
+    "healthcare",
+    "nonprofits",
+    "smes",
+    "public-sector",
+    "media-and-communications"
+   ],
+   "faqs": [
+    {
+     "q": "Can you support a system you didn't build?",
+     "a": "Often, yes. We start with a health check to understand the system, its code or configuration, and its risks before agreeing on support terms."
+    },
+    {
+     "q": "How quickly will you respond?",
+     "a": "Response commitments depend on your support agreement and the severity of the issue. Critical issues are always handled first."
+    },
+    {
+     "q": "Do you provide refresher training?",
+     "a": "Yes. We run refresher sessions for existing users and onboarding sessions for new staff."
+    }
+   ],
+   "cta": {
+    "label": "Get Technical Support",
+    "form": "support",
+    "heading": "Request technical support.",
+    "body": "Tell us which system is affected, what's happening, and how urgent it is. We'll route your request by severity."
+   }
+  }
+ ],
+ "programs": [
+  {
+   "slug": "corporate-training",
+   "path": "/corporate-training",
+   "name": "Corporate Training",
+   "eyebrow": "CORPORATE TRAINING",
+   "title": "Technology training designed around your team's goals.",
+   "metaDescription": "Customized corporate technology training: needs assessment, tailored curriculum, cohort delivery, assessment, and reporting.",
+   "summary": "Needs assessment, customized curriculum, cohort delivery, assessment, and reporting for organizations.",
+   "intro": "We assess your team's current skills, design a curriculum around your tools and objectives, deliver it in cohorts, and report on participation and progress.",
+   "audience": "HR, learning and development, schools, nonprofits, and public-sector training buyers.",
+   "problem": {
+    "heading": "Generic courses rarely change how a team works.",
+    "body": "Training has impact when it matches your systems, your roles, and the outcomes you need, and when you can see who took part and what they learned.",
+    "points": [
+     "Teams adopting new systems without enough support",
+     "Mixed skill levels within the same department",
+     "No clear evidence of what training achieved"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Needs assessment",
+     "desc": "Skills survey and interviews to set objectives and baselines."
+    },
+    {
+     "title": "Customized curriculum",
+     "desc": "Content built around your tools, data, and workflows."
+    },
+    {
+     "title": "Flexible delivery",
+     "desc": "Live online, in person, or hybrid, scheduled around operations."
+    },
+    {
+     "title": "Cohort model",
+     "desc": "Groups organized by role or skill level, with practical exercises."
+    },
+    {
+     "title": "Assessment",
+     "desc": "Practical tasks that show what participants can now do."
+    },
+    {
+     "title": "Reporting",
+     "desc": "Attendance, assessment results, and recommendations for sponsors."
+    }
+   ],
+   "engagementTypes": [
+    {
+     "title": "Team upskilling",
+     "desc": "Build data, software, cloud, or digital skills across a team."
+    },
+    {
+     "title": "System adoption training",
+     "desc": "Train users on a newly implemented system."
+    },
+    {
+     "title": "Leadership briefings",
+     "desc": "Short sessions on data, AI, and digital transformation for leaders."
+    }
+   ],
+   "process": [
+    {
+     "title": "Assess",
+     "desc": "Understand participants, objectives, and current skill levels."
+    },
+    {
+     "title": "Design",
+     "desc": "Agree the curriculum, schedule, format, and success measures."
+    },
+    {
+     "title": "Deliver",
+     "desc": "Run practical, cohort-based sessions with trainer support."
+    },
+    {
+     "title": "Assess and report",
+     "desc": "Evaluate learning and share a report with recommendations."
+    }
+   ],
+   "industries": [
+    "education",
+    "healthcare",
+    "nonprofits",
+    "smes",
+    "public-sector",
+    "media-and-communications"
+   ],
+   "faqs": [
+    {
+     "q": "What is the minimum group size?",
+     "a": "We can train small teams and large cohorts. Group size affects format and pricing, which we confirm in the proposal."
+    },
+    {
+     "q": "Can training use our own systems and data?",
+     "a": "Yes, where it is safe to do so. We can use sample or anonymized data when your real data is sensitive."
+    },
+    {
+     "q": "Do participants receive certificates?",
+     "a": "Participants who meet the attendance and assessment requirements can receive a Novatrix certificate of completion. It is not an accredited qualification."
+    },
+    {
+     "q": "How is pricing decided?",
+     "a": "Pricing depends on participant numbers, customization, format, and duration. You receive a written proposal after the needs assessment."
+    }
+   ],
+   "cta": {
+    "label": "Request Corporate Training",
+    "form": "training",
+    "heading": "Request a corporate training proposal.",
+    "body": "Tell us about your audience, objectives, participant numbers, preferred dates, and location."
+   }
+  },
+  {
+   "slug": "youth-and-workforce-programs",
+   "path": "/youth-and-workforce-programs",
+   "name": "Youth and Workforce Programs",
+   "eyebrow": "YOUTH AND WORKFORCE PROGRAMS",
+   "title": "Practical digital skills for emerging talent.",
+   "metaDescription": "Youth and workforce development programs in digital skills, data, software, and career readiness, delivered with partners and sponsors.",
+   "summary": "Practical, project-based digital skills programs for students, graduates, and job seekers.",
+   "intro": "We design and deliver practical technology programs for young people and job seekers, often with schools, nonprofits, employers, and sponsors.",
+   "audience": "Program sponsors, schools, nonprofits, and public-sector partners supporting emerging talent.",
+   "problem": {
+    "heading": "Talent is everywhere; access to practical training is not.",
+    "body": "Many young people lack access to hands-on, current technology training and to the portfolio evidence employers look for.",
+    "points": [
+     "Graduates without practical, portfolio-ready projects",
+     "Limited access to mentors and industry tools",
+     "Sponsors who need clear reporting on participation and progress"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Digital foundations",
+     "desc": "Computer, internet, and productivity skills for beginners."
+    },
+    {
+     "title": "Technical tracks",
+     "desc": "Data, web development, cloud, and digital marketing."
+    },
+    {
+     "title": "Project-based learning",
+     "desc": "Participants build real projects for their portfolios."
+    },
+    {
+     "title": "Career readiness",
+     "desc": "CVs, LinkedIn profiles, interview practice, and professional skills."
+    },
+    {
+     "title": "Mentorship",
+     "desc": "Guidance from practitioners throughout the program."
+    },
+    {
+     "title": "Sponsor reporting",
+     "desc": "Participation, completion, and assessment reporting."
+    }
+   ],
+   "boundaries": "We support participants' career readiness but do not guarantee employment, internships, or placements.",
+   "engagementTypes": [
+    {
+     "title": "Sponsored cohort",
+     "desc": "A funded cohort for a defined group of participants."
+    },
+    {
+     "title": "School partnership",
+     "desc": "Programs delivered with a school or university."
+    },
+    {
+     "title": "Community program",
+     "desc": "Programs delivered with nonprofits or community groups."
+    }
+   ],
+   "process": [
+    {
+     "title": "Plan",
+     "desc": "Agree participants, outcomes, schedule, and reporting with partners."
+    },
+    {
+     "title": "Recruit",
+     "desc": "Select participants with clear, inclusive criteria."
+    },
+    {
+     "title": "Deliver",
+     "desc": "Run live, project-based sessions with mentor support."
+    },
+    {
+     "title": "Report",
+     "desc": "Share participation, completion, and assessment results."
+    }
+   ],
+   "industries": [
+    "education",
+    "nonprofits",
+    "public-sector"
+   ],
+   "faqs": [
+    {
+     "q": "Can you deliver programs in partnership with us?",
+     "a": "Yes. We work with schools, nonprofits, employers, and sponsors. Use the form to tell us about your participants and goals."
+    },
+    {
+     "q": "Do participants get jobs after the program?",
+     "a": "We focus on practical skills, portfolio projects, and career readiness. We do not guarantee employment outcomes."
+    }
+   ],
+   "cta": {
+    "label": "Discuss a Workforce Program",
+    "form": "training",
+    "heading": "Plan a youth or workforce program.",
+    "body": "Tell us about the participants, the skills you want to build, the number of people, and your timeline."
+   }
+  }
+ ],
+ "solutions": [
+  {
+   "slug": "web-and-mobile-platforms",
+   "path": "/solutions/web-and-mobile-platforms",
+   "name": "Web and Mobile Platforms",
+   "eyebrow": "SOLUTIONS",
+   "title": "Web and mobile platforms your users will actually use.",
+   "metaDescription": "Responsive websites, web applications, and mobile apps designed for real users, low bandwidth, and long-term maintainability.",
+   "summary": "Responsive web applications and mobile apps designed for real users and real devices.",
+   "intro": "We build websites, web applications, and mobile apps that work well on everyday phones and slower connections, and that your team can maintain.",
+   "audience": "Organizations launching a digital service for customers, members, students, or staff.",
+   "problem": {
+    "heading": "Many users reach you on a phone, often on a slow connection.",
+    "body": "Platforms designed only for fast desktops exclude people. We design mobile-first, test on mid-range devices, and keep pages light.",
+    "points": [
+     "Customers who can't complete tasks on mobile",
+     "Slow pages on constrained networks",
+     "Inaccessible forms and navigation"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Customer-facing web apps",
+     "desc": "Booking, registration, ordering, and self-service."
+    },
+    {
+     "title": "Mobile apps",
+     "desc": "Native or cross-platform apps, or progressive web apps."
+    },
+    {
+     "title": "Content-managed websites",
+     "desc": "Sites your team can update without a developer."
+    },
+    {
+     "title": "Accessibility",
+     "desc": "Designed and tested against WCAG 2.2 AA."
+    }
+   ],
+   "engagementTypes": [
+    {
+     "title": "New platform",
+     "desc": "Design and build from the ground up."
+    },
+    {
+     "title": "Redesign",
+     "desc": "Improve usability, speed, and accessibility of an existing platform."
+    }
+   ],
+   "process": [
+    {
+     "title": "Discover",
+     "desc": "Understand goals, users, workflows, systems, constraints, and success measures."
+    },
+    {
+     "title": "Define",
+     "desc": "Document requirements, scope, deliverables, timeline, responsibilities, risks, and acceptance criteria."
+    },
+    {
+     "title": "Design",
+     "desc": "Create architecture, user journeys, prototypes, data structures, and the implementation plan."
+    },
+    {
+     "title": "Develop or Configure",
+     "desc": "Build the custom solution, or configure and integrate the selected platform."
+    },
+    {
+     "title": "Test",
+     "desc": "Functional, security, usability, accessibility, performance, and user acceptance testing."
+    },
+    {
+     "title": "Train",
+     "desc": "Prepare administrators and users through practical training, documentation, and guided exercises."
+    },
+    {
+     "title": "Launch",
+     "desc": "Deploy, migrate approved data, support go-live, and resolve initial issues."
+    },
+    {
+     "title": "Support and Optimize",
+     "desc": "Monitor, maintain, collect feedback, and introduce improvements."
+    }
+   ],
+   "industries": [
+    "education",
+    "nonprofits",
+    "smes",
+    "media-and-communications"
+   ],
+   "faqs": [
+    {
+     "q": "Web app or mobile app?",
+     "a": "We recommend based on your users, the features you need, and your budget. A well-built web app is often the fastest route; native apps suit offline or device-heavy features."
+    },
+    {
+     "q": "How much does a solution like this cost?",
+     "a": "It depends on scope, users, and integrations. After a short discovery conversation we send a written proposal with milestones."
+    }
+   ],
+   "cta": {
+    "label": "Discuss Your Platform",
+    "form": "project",
+    "service": "custom_software",
+    "heading": "Planning a web or mobile platform?",
+    "body": "Tell us who it's for and what they need to do. We'll help you shape the right first release."
+   }
+  },
+  {
+   "slug": "business-automation",
+   "path": "/solutions/business-automation",
+   "name": "Business Automation",
+   "eyebrow": "SOLUTIONS",
+   "title": "Automate the repetitive work that slows your team down.",
+   "metaDescription": "Business process automation: digital forms, approvals, notifications, document generation, and workflow tools that reduce manual work.",
+   "summary": "Digital workflows, approvals, notifications, and document generation that remove manual work.",
+   "intro": "We map how work moves through your organization, then automate the steps that don't need a person: data entry, approvals, reminders, and documents.",
+   "audience": "Operations teams handling repetitive, paper-based, or spreadsheet-driven processes.",
+   "problem": {
+    "heading": "Manual processes are slow, error-prone, and hard to track.",
+    "body": "Paper forms, email approvals, and copied spreadsheets hide the status of work and create errors. Automation makes work visible and consistent.",
+    "points": [
+     "Approvals stuck in inboxes",
+     "Re-typing the same data in several places",
+     "No clear status for requests"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Digital forms",
+     "desc": "Replace paper and email with validated online forms."
+    },
+    {
+     "title": "Approval workflows",
+     "desc": "Route requests to the right people with a clear audit trail."
+    },
+    {
+     "title": "Notifications",
+     "desc": "Email, SMS, or messaging reminders at the right time."
+    },
+    {
+     "title": "Document generation",
+     "desc": "Letters, invoices, and certificates generated from data."
+    }
+   ],
+   "engagementTypes": [
+    {
+     "title": "Process review",
+     "desc": "Identify which steps are worth automating first."
+    },
+    {
+     "title": "Automation build",
+     "desc": "Design, build, and roll out the workflow."
+    }
+   ],
+   "process": [
+    {
+     "title": "Discover",
+     "desc": "Understand goals, users, workflows, systems, constraints, and success measures."
+    },
+    {
+     "title": "Define",
+     "desc": "Document requirements, scope, deliverables, timeline, responsibilities, risks, and acceptance criteria."
+    },
+    {
+     "title": "Design",
+     "desc": "Create architecture, user journeys, prototypes, data structures, and the implementation plan."
+    },
+    {
+     "title": "Develop or Configure",
+     "desc": "Build the custom solution, or configure and integrate the selected platform."
+    },
+    {
+     "title": "Test",
+     "desc": "Functional, security, usability, accessibility, performance, and user acceptance testing."
+    },
+    {
+     "title": "Train",
+     "desc": "Prepare administrators and users through practical training, documentation, and guided exercises."
+    },
+    {
+     "title": "Launch",
+     "desc": "Deploy, migrate approved data, support go-live, and resolve initial issues."
+    },
+    {
+     "title": "Support and Optimize",
+     "desc": "Monitor, maintain, collect feedback, and introduce improvements."
+    }
+   ],
+   "industries": [
+    "smes",
+    "nonprofits",
+    "public-sector",
+    "education"
+   ],
+   "faqs": [
+    {
+     "q": "Do we need custom software to automate?",
+     "a": "Not always. We first check whether your existing tools can be configured, and only recommend custom work when it adds clear value."
+    },
+    {
+     "q": "How much does a solution like this cost?",
+     "a": "It depends on scope, users, and integrations. After a short discovery conversation we send a written proposal with milestones."
+    }
+   ],
+   "cta": {
+    "label": "Discuss an Automation",
+    "form": "project",
+    "service": "custom_software",
+    "heading": "Which process would you automate first?",
+    "body": "Describe the process, who is involved, and where it slows down."
+   }
+  },
+  {
+   "slug": "data-and-ai",
+   "path": "/solutions/data-and-ai",
+   "name": "Data and AI",
+   "eyebrow": "SOLUTIONS",
+   "title": "Practical data and AI solutions grounded in real use.",
+   "metaDescription": "Data and AI solutions: data pipelines, analytics dashboards, and practical, responsibly governed AI features.",
+   "summary": "Data pipelines, analytics, and practical AI features with responsible governance.",
+   "intro": "We help you organize your data, report on it reliably, and apply AI only where it solves a real problem, with human oversight and clear limits.",
+   "audience": "Leaders who want better decisions from their data and a responsible approach to AI.",
+   "problem": {
+    "heading": "Data is only useful when it is trusted and accessible.",
+    "body": "Inconsistent data and manual reports make decisions slow. AI adds value only on top of good data and a clear use case.",
+    "points": [
+     "Reports assembled by hand every month",
+     "Conflicting numbers across teams",
+     "Unclear where AI would help"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Data foundations",
+     "desc": "Data models, pipelines, and quality checks."
+    },
+    {
+     "title": "Analytics and dashboards",
+     "desc": "Reporting that answers the questions leaders ask."
+    },
+    {
+     "title": "AI use-case discovery",
+     "desc": "Identify, prototype, and evaluate AI opportunities."
+    },
+    {
+     "title": "Responsible AI",
+     "desc": "Human review, privacy safeguards, and documented limits."
+    }
+   ],
+   "boundaries": "AI features are presented as assistance, not professional advice, and are reviewed before release.",
+   "engagementTypes": [
+    {
+     "title": "Data assessment",
+     "desc": "Review data sources, quality, and reporting needs."
+    },
+    {
+     "title": "Dashboard build",
+     "desc": "Design and deliver reporting for decision-makers."
+    },
+    {
+     "title": "AI pilot",
+     "desc": "Prototype one well-defined use case and measure it."
+    }
+   ],
+   "process": [
+    {
+     "title": "Discover",
+     "desc": "Understand goals, users, workflows, systems, constraints, and success measures."
+    },
+    {
+     "title": "Define",
+     "desc": "Document requirements, scope, deliverables, timeline, responsibilities, risks, and acceptance criteria."
+    },
+    {
+     "title": "Design",
+     "desc": "Create architecture, user journeys, prototypes, data structures, and the implementation plan."
+    },
+    {
+     "title": "Develop or Configure",
+     "desc": "Build the custom solution, or configure and integrate the selected platform."
+    },
+    {
+     "title": "Test",
+     "desc": "Functional, security, usability, accessibility, performance, and user acceptance testing."
+    },
+    {
+     "title": "Train",
+     "desc": "Prepare administrators and users through practical training, documentation, and guided exercises."
+    },
+    {
+     "title": "Launch",
+     "desc": "Deploy, migrate approved data, support go-live, and resolve initial issues."
+    },
+    {
+     "title": "Support and Optimize",
+     "desc": "Monitor, maintain, collect feedback, and introduce improvements."
+    }
+   ],
+   "industries": [
+    "education",
+    "healthcare",
+    "nonprofits",
+    "smes",
+    "public-sector"
+   ],
+   "faqs": [
+    {
+     "q": "Is our data safe if you build AI features?",
+     "a": "We minimize the data used, agree on where it is processed, and apply your privacy requirements before anything is built."
+    },
+    {
+     "q": "How much does a solution like this cost?",
+     "a": "It depends on scope, users, and integrations. After a short discovery conversation we send a written proposal with milestones."
+    }
+   ],
+   "cta": {
+    "label": "Discuss a Data Project",
+    "form": "project",
+    "service": "custom_software",
+    "heading": "What decision do you want better data for?",
+    "body": "Tell us about your data sources and the questions you need answered."
+   }
+  },
+  {
+   "slug": "learning-platforms",
+   "path": "/solutions/learning-platforms",
+   "name": "Learning Platforms",
+   "eyebrow": "SOLUTIONS",
+   "title": "Learning platforms that combine technology and training.",
+   "metaDescription": "Learning platform solutions: selection, setup, and custom learning tools, combined with trainer and learner onboarding.",
+   "summary": "Learning platform selection, setup, and custom tools, with onboarding for trainers and learners.",
+   "intro": "Because we deliver training ourselves, we understand what trainers and learners need from a platform. We help you select, configure, or build one, and train people to use it.",
+   "audience": "Schools, training providers, nonprofits, and HR teams delivering learning programs.",
+   "problem": {
+    "heading": "A learning platform only works if trainers and learners adopt it.",
+    "body": "Platforms fail when they are hard to use, poorly configured, or introduced without training. We treat onboarding as part of the solution.",
+    "points": [
+     "Content spread across email and drives",
+     "No record of learner progress",
+     "Trainers unsure how to use the platform"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Platform selection",
+     "desc": "Compare learning platforms against your needs."
+    },
+    {
+     "title": "Configuration",
+     "desc": "Courses, roles, enrollment, and reporting."
+    },
+    {
+     "title": "Custom learning tools",
+     "desc": "Features your platform doesn't offer out of the box."
+    },
+    {
+     "title": "Onboarding",
+     "desc": "Training for administrators, trainers, and learners."
+    }
+   ],
+   "engagementTypes": [
+    {
+     "title": "Implementation",
+     "desc": "Set up and launch an existing learning platform."
+    },
+    {
+     "title": "Custom build",
+     "desc": "Build learning features around your model."
+    }
+   ],
+   "process": [
+    {
+     "title": "Discover",
+     "desc": "Understand goals, users, workflows, systems, constraints, and success measures."
+    },
+    {
+     "title": "Define",
+     "desc": "Document requirements, scope, deliverables, timeline, responsibilities, risks, and acceptance criteria."
+    },
+    {
+     "title": "Design",
+     "desc": "Create architecture, user journeys, prototypes, data structures, and the implementation plan."
+    },
+    {
+     "title": "Develop or Configure",
+     "desc": "Build the custom solution, or configure and integrate the selected platform."
+    },
+    {
+     "title": "Test",
+     "desc": "Functional, security, usability, accessibility, performance, and user acceptance testing."
+    },
+    {
+     "title": "Train",
+     "desc": "Prepare administrators and users through practical training, documentation, and guided exercises."
+    },
+    {
+     "title": "Launch",
+     "desc": "Deploy, migrate approved data, support go-live, and resolve initial issues."
+    },
+    {
+     "title": "Support and Optimize",
+     "desc": "Monitor, maintain, collect feedback, and introduce improvements."
+    }
+   ],
+   "industries": [
+    "education",
+    "nonprofits",
+    "public-sector"
+   ],
+   "faqs": [
+    {
+     "q": "How much does a solution like this cost?",
+     "a": "It depends on scope, users, and integrations. After a short discovery conversation we send a written proposal with milestones."
+    }
+   ],
+   "cta": {
+    "label": "Discuss a Learning Platform",
+    "form": "project",
+    "service": "system_implementation",
+    "heading": "Planning a learning platform?",
+    "body": "Tell us about your learners, your programs, and any platform you already use."
+   }
+  },
+  {
+   "slug": "portals-and-dashboards",
+   "path": "/solutions/portals-and-dashboards",
+   "name": "Portals and Dashboards",
+   "eyebrow": "SOLUTIONS",
+   "title": "Portals and dashboards that give each user the right view.",
+   "metaDescription": "Secure client, member, staff, and partner portals with role-based access, plus dashboards for monitoring and reporting.",
+   "summary": "Secure, role-based portals and dashboards for clients, members, staff, and partners.",
+   "intro": "We build secure portals where each user sees what they need, and dashboards that make performance visible without manual reporting.",
+   "audience": "Organizations serving clients, members, beneficiaries, or partners who need self-service access.",
+   "problem": {
+    "heading": "People shouldn't have to email you for information they could look up.",
+    "body": "A portal gives clients and staff self-service access to documents, requests, and status, and frees your team from repetitive questions.",
+    "points": [
+     "Repetitive status requests",
+     "Documents shared by email",
+     "Leadership without a live view of performance"
+    ]
+   },
+   "capabilities": [
+    {
+     "title": "Client and member portals",
+     "desc": "Self-service access to documents, requests, and records."
+    },
+    {
+     "title": "Staff portals",
+     "desc": "Internal tools with role-based permissions."
+    },
+    {
+     "title": "Dashboards",
+     "desc": "Live metrics and reports for each audience."
+    },
+    {
+     "title": "Access control",
+     "desc": "Authentication, roles, and audit logs."
+    }
+   ],
+   "engagementTypes": [
+    {
+     "title": "New portal",
+     "desc": "Design and build a portal for a defined audience."
+    },
+    {
+     "title": "Dashboard",
+     "desc": "Reporting on top of your existing systems."
+    }
+   ],
+   "process": [
+    {
+     "title": "Discover",
+     "desc": "Understand goals, users, workflows, systems, constraints, and success measures."
+    },
+    {
+     "title": "Define",
+     "desc": "Document requirements, scope, deliverables, timeline, responsibilities, risks, and acceptance criteria."
+    },
+    {
+     "title": "Design",
+     "desc": "Create architecture, user journeys, prototypes, data structures, and the implementation plan."
+    },
+    {
+     "title": "Develop or Configure",
+     "desc": "Build the custom solution, or configure and integrate the selected platform."
+    },
+    {
+     "title": "Test",
+     "desc": "Functional, security, usability, accessibility, performance, and user acceptance testing."
+    },
+    {
+     "title": "Train",
+     "desc": "Prepare administrators and users through practical training, documentation, and guided exercises."
+    },
+    {
+     "title": "Launch",
+     "desc": "Deploy, migrate approved data, support go-live, and resolve initial issues."
+    },
+    {
+     "title": "Support and Optimize",
+     "desc": "Monitor, maintain, collect feedback, and introduce improvements."
+    }
+   ],
+   "industries": [
+    "education",
+    "healthcare",
+    "nonprofits",
+    "smes",
+    "public-sector"
+   ],
+   "faqs": [
+    {
+     "q": "How much does a solution like this cost?",
+     "a": "It depends on scope, users, and integrations. After a short discovery conversation we send a written proposal with milestones."
+    }
+   ],
+   "cta": {
+    "label": "Discuss a Portal",
+    "form": "project",
+    "service": "custom_software",
+    "heading": "Who needs a portal or dashboard?",
+    "body": "Tell us who the users are and what they need to see or do."
+   }
+  }
+ ],
+ "industries": [
+  {
+   "slug": "education",
+   "name": "Education",
+   "title": "Digital solutions and training for education.",
+   "metaDescription": "Technology for schools, universities, and training providers: student systems, learning platforms, and staff digital-skills training.",
+   "summary": "Student systems, learning platforms, and digital-skills training for staff and learners.",
+   "intro": "Schools, universities, and training providers need reliable systems for administration and learning, and staff who are confident using them.",
+   "problems": [
+    "Admissions, records, and results managed on paper or spreadsheets",
+    "Learning content scattered across email and messaging apps",
+    "Staff who need support to teach and work digitally"
+   ],
+   "services": [
+    "/system-implementation",
+    "/solutions/learning-platforms",
+    "/solutions/portals-and-dashboards",
+    "/corporate-training"
+   ],
+   "sampleSolutions": [
+    {
+     "title": "Student information system rollout",
+     "desc": "Assess, configure, migrate records, and train staff."
+    },
+    {
+     "title": "Learning platform setup",
+     "desc": "Configure courses and roles, and onboard teachers and students."
+    },
+    {
+     "title": "Parent and student portal",
+     "desc": "Self-service access to results, fees, and announcements."
+    }
+   ],
+   "training": "Digital-skills training for teachers and administrators, and practical tech programs for students."
+  },
+  {
+   "slug": "healthcare",
+   "name": "Healthcare",
+   "title": "Technology that supports care teams.",
+   "metaDescription": "Healthcare technology services: appointment and records workflows, reporting, integration, and staff training, with privacy built in.",
+   "summary": "Workflow, reporting, and integration solutions for clinics and health programs, with privacy built in.",
+   "intro": "Clinics and health programs need systems that reduce administrative load, protect sensitive data, and fit into busy clinical workflows.",
+   "problems": [
+    "Appointment and patient administration handled manually",
+    "Program data that is hard to aggregate and report",
+    "Staff who need training on new systems during busy shifts"
+   ],
+   "services": [
+    "/system-implementation",
+    "/systems-integration",
+    "/solutions/data-and-ai",
+    "/support-and-maintenance"
+   ],
+   "sampleSolutions": [
+    {
+     "title": "Appointment and queue management",
+     "desc": "Reduce waiting and manual booking."
+    },
+    {
+     "title": "Program reporting dashboard",
+     "desc": "Aggregate program data for managers and funders."
+    },
+    {
+     "title": "System training for clinical staff",
+     "desc": "Short, role-based sessions around shift patterns."
+    }
+   ],
+   "training": "Role-based system training scheduled around clinical operations."
+  },
+  {
+   "slug": "nonprofits",
+   "name": "Nonprofits",
+   "title": "Digital tools that stretch nonprofit resources further.",
+   "metaDescription": "Technology for nonprofits: beneficiary and donor management, program reporting, automation, and staff and volunteer training.",
+   "summary": "Beneficiary, donor, and program tools, reporting for funders, and volunteer training.",
+   "intro": "Nonprofits need to do more with limited budgets and report clearly to funders. The right tools and training free up time for the mission.",
+   "problems": [
+    "Beneficiary and donor records kept in spreadsheets",
+    "Time-consuming reporting to funders",
+    "Volunteers and staff with mixed digital skills"
+   ],
+   "services": [
+    "/software-development",
+    "/solutions/business-automation",
+    "/solutions/data-and-ai",
+    "/youth-and-workforce-programs"
+   ],
+   "sampleSolutions": [
+    {
+     "title": "Beneficiary registration and tracking",
+     "desc": "Consistent records and program follow-up."
+    },
+    {
+     "title": "Funder reporting dashboard",
+     "desc": "Program indicators collected once and reported many times."
+    },
+    {
+     "title": "Donation and event workflows",
+     "desc": "Automated confirmations and records."
+    }
+   ],
+   "training": "Digital-skills programs for staff, volunteers, and the communities you serve."
+  },
+  {
+   "slug": "smes",
+   "name": "SMEs",
+   "title": "Technology that helps small and medium businesses grow.",
+   "metaDescription": "Technology for small and medium-sized businesses: websites, automation, business systems, integrations, and team training.",
+   "summary": "Websites, business systems, automation, and team training sized for growing businesses.",
+   "intro": "Growing businesses need practical systems that save time without enterprise complexity, and teams that can use them well.",
+   "problems": [
+    "Sales, stock, and invoicing tracked in separate tools",
+    "No online channel for customers",
+    "Owners doing admin work that could be automated"
+   ],
+   "services": [
+    "/software-development",
+    "/solutions/web-and-mobile-platforms",
+    "/solutions/business-automation",
+    "/systems-integration"
+   ],
+   "sampleSolutions": [
+    {
+     "title": "Online ordering or booking",
+     "desc": "Let customers buy or book online with payment integration."
+    },
+    {
+     "title": "Business system setup",
+     "desc": "Implement an accounting, CRM, or inventory system."
+    },
+    {
+     "title": "Workflow automation",
+     "desc": "Automate quotes, invoices, and reminders."
+    }
+   ],
+   "training": "Practical training so your team gets full value from the tools you already pay for."
+  },
+  {
+   "slug": "public-sector",
+   "name": "Public Sector",
+   "title": "Digital services and capacity building for the public sector.",
+   "metaDescription": "Public sector digital transformation: citizen-facing services, system implementation, data reporting, and civil-servant training.",
+   "summary": "Citizen services, system implementation, reporting, and capacity building for public institutions.",
+   "intro": "Public institutions need accessible digital services, dependable systems, and staff trained to run them, delivered transparently and within procurement rules.",
+   "problems": [
+    "Paper-based processes that slow services to citizens",
+    "Systems introduced without enough staff training",
+    "Data held in silos across departments"
+   ],
+   "services": [
+    "/system-implementation",
+    "/systems-integration",
+    "/solutions/portals-and-dashboards",
+    "/corporate-training"
+   ],
+   "sampleSolutions": [
+    {
+     "title": "Online application services",
+     "desc": "Accessible forms with status tracking."
+    },
+    {
+     "title": "Records digitization",
+     "desc": "Move paper records into a structured system."
+    },
+    {
+     "title": "Civil-servant digital skills",
+     "desc": "Cohort training with assessment and reporting."
+    }
+   ],
+   "training": "Capacity-building programs with attendance, assessment, and reporting for sponsors."
+  },
+  {
+   "slug": "media-and-communications",
+   "name": "Media and Communications",
+   "title": "Digital platforms for media and communications teams.",
+   "metaDescription": "Technology for media and communications: content platforms, audience engagement tools, analytics, and digital-skills training.",
+   "summary": "Content platforms, audience tools, analytics, and digital-skills training for media teams.",
+   "intro": "Media and communications teams need platforms that publish quickly, reach audiences on mobile, and show what content performs.",
+   "problems": [
+    "Publishing workflows that depend on developers",
+    "Limited insight into audience engagement",
+    "Teams adapting to new digital channels"
+   ],
+   "services": [
+    "/solutions/web-and-mobile-platforms",
+    "/solutions/data-and-ai",
+    "/support-and-maintenance",
+    "/courses"
+   ],
+   "sampleSolutions": [
+    {
+     "title": "Content-managed publishing platform",
+     "desc": "Editors publish without developer help."
+    },
+    {
+     "title": "Audience analytics dashboard",
+     "desc": "Understand what content reaches people."
+    },
+    {
+     "title": "Digital marketing training",
+     "desc": "Skills in SEO, content, and analytics."
+    }
+   ],
+   "training": "Digital marketing, content, and analytics training for communications teams."
+  }
+ ],
+ "insights": [
+  {
+   "slug": "preparing-for-a-system-implementation",
+   "title": "Preparing for a system implementation: a practical checklist",
+   "summary": "Most system projects succeed or fail before configuration starts. Here is what to prepare before you introduce or replace a system.",
+   "category": "Guides",
+   "author": "Novatrix Team",
+   "date": "2026-09-01",
+   "readMinutes": 5,
+   "body": [
+    {
+     "type": "p",
+     "text": "Introducing a new system is an organizational change, not only a technical one. The preparation you do before configuration starts has the biggest influence on whether people adopt it."
+    },
+    {
+     "type": "h2",
+     "text": "1. Agree the outcome"
+    },
+    {
+     "type": "p",
+     "text": "Write down the problem the system should solve and how you will know it worked. Measures such as time saved per request, fewer errors, or faster reporting keep decisions focused."
+    },
+    {
+     "type": "h2",
+     "text": "2. Map how work happens today"
+    },
+    {
+     "type": "p",
+     "text": "Document the current process, including workarounds. A system configured around an unclear process simply digitizes the confusion."
+    },
+    {
+     "type": "h2",
+     "text": "3. Review your data early"
+    },
+    {
+     "type": "ul",
+     "items": [
+      "List every data source that must move to the new system",
+      "Check completeness, duplicates, and inconsistent formats",
+      "Decide what historical data is actually needed",
+      "Name an owner who can approve data decisions"
+     ]
+    },
+    {
+     "type": "h2",
+     "text": "4. Plan training from the start"
+    },
+    {
+     "type": "p",
+     "text": "Budget time for role-based training, documentation, and support during go-live. Adoption is part of implementation, not a follow-up task."
+    },
+    {
+     "type": "h2",
+     "text": "5. Decide how you will support it"
+    },
+    {
+     "type": "p",
+     "text": "Agree who handles user questions, updates, backups, and improvements after launch, and how issues are escalated."
+    }
+   ],
+   "cta": {
+    "label": "Schedule a System Assessment",
+    "to": "/system-implementation"
+   },
+   "related": [
+    "custom-software-or-off-the-shelf",
+    "planning-corporate-technology-training"
+   ]
+  },
+  {
+   "slug": "custom-software-or-off-the-shelf",
+   "title": "Custom software or off-the-shelf: how to decide",
+   "summary": "Building custom software is not always the right answer. A few questions help you decide between building, buying, and configuring.",
+   "category": "Articles",
+   "author": "Novatrix Team",
+   "date": "2026-08-18",
+   "readMinutes": 4,
+   "body": [
+    {
+     "type": "p",
+     "text": "Organizations often ask whether they should build a custom application or buy an existing product. The honest answer depends on how unique your process is and how much control you need."
+    },
+    {
+     "type": "h2",
+     "text": "Buy or configure when"
+    },
+    {
+     "type": "ul",
+     "items": [
+      "Your process is standard, such as accounting or payroll",
+      "A mature product already meets most of your requirements",
+      "You need to launch quickly with a limited budget"
+     ]
+    },
+    {
+     "type": "h2",
+     "text": "Build when"
+    },
+    {
+     "type": "ul",
+     "items": [
+      "Your process is a differentiator for your organization",
+      "Existing products force costly workarounds",
+      "You need tight integration with other systems or full data control"
+     ]
+    },
+    {
+     "type": "h2",
+     "text": "Consider a combination"
+    },
+    {
+     "type": "p",
+     "text": "Many successful solutions configure an existing platform for standard work and add custom components or integrations where they create value."
+    },
+    {
+     "type": "p",
+     "text": "Whichever route you choose, plan for training and ongoing support. Software only creates value when people use it confidently."
+    }
+   ],
+   "cta": {
+    "label": "Discuss Your Software Project",
+    "to": "/software-development"
+   },
+   "related": [
+    "preparing-for-a-system-implementation"
+   ]
+  },
+  {
+   "slug": "planning-corporate-technology-training",
+   "title": "Planning corporate technology training that changes how teams work",
+   "summary": "Effective workforce training starts with clear objectives and ends with evidence. A simple framework for planning your next program.",
+   "category": "Guides",
+   "author": "Novatrix Team",
+   "date": "2026-08-04",
+   "readMinutes": 4,
+   "body": [
+    {
+     "type": "p",
+     "text": "Training budgets are easiest to justify when programs are linked to specific work outcomes and when sponsors can see what participants learned."
+    },
+    {
+     "type": "h2",
+     "text": "Start with a needs assessment"
+    },
+    {
+     "type": "p",
+     "text": "Survey participants and managers to understand current skills, tools, and the tasks people struggle with. Group participants by role or level so sessions stay relevant."
+    },
+    {
+     "type": "h2",
+     "text": "Make it practical"
+    },
+    {
+     "type": "p",
+     "text": "Use exercises based on the tools and data your team actually uses. Practical tasks build confidence faster than slides."
+    },
+    {
+     "type": "h2",
+     "text": "Measure and report"
+    },
+    {
+     "type": "ul",
+     "items": [
+      "Attendance and completion",
+      "Assessment results based on practical tasks",
+      "Participant feedback",
+      "Recommendations for follow-up support"
+     ]
+    }
+   ],
+   "cta": {
+    "label": "Request Corporate Training",
+    "to": "/corporate-training"
+   },
+   "related": [
+    "preparing-for-a-system-implementation"
+   ]
+  }
+ ]
+}

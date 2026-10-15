@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// The signed-in session: a JWT access/refresh pair, kept in the iOS Keychain
-/// or Android Keystore.
+/// or Android Keystore, with a saved copy of the person's details so a returning
+/// user stays signed in while the backend can't be reached.
 class Tokens {
   const Tokens({required this.access, required this.refresh});
 
@@ -22,6 +25,7 @@ class TokenStore {
   final FlutterSecureStorage _storage;
   static const _accessKey = 'nvx_access';
   static const _refreshKey = 'nvx_refresh';
+  static const _sessionKey = 'nvx_session';
 
   Tokens? _cached;
   bool _loaded = false;
@@ -42,6 +46,29 @@ class TokenStore {
     return _cached;
   }
 
+  /// The last user and roles the backend confirmed, as JSON. Null when signed out.
+  Future<Map<String, dynamic>?> readSaved() async {
+    try {
+      final raw = await _storage.read(key: _sessionKey);
+      return raw == null ? null : (jsonDecode(raw) as Map).cast<String, dynamic>();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> writeSaved(Map<String, dynamic>? session) async {
+    try {
+      if (session == null) {
+        await _storage.delete(key: _sessionKey);
+      } else {
+        await _storage.write(key: _sessionKey, value: jsonEncode(session));
+      }
+    } catch (_) {
+      // Saving is best effort: the session still works for this run of the app.
+    }
+  }
+
+  /// Signing out (null) also removes the saved details.
   Future<void> write(Tokens? tokens) async {
     _cached = tokens;
     _loaded = true;
@@ -49,6 +76,7 @@ class TokenStore {
       if (tokens == null) {
         await _storage.delete(key: _accessKey);
         await _storage.delete(key: _refreshKey);
+        await _storage.delete(key: _sessionKey);
       } else {
         await _storage.write(key: _accessKey, value: tokens.access);
         await _storage.write(key: _refreshKey, value: tokens.refresh);

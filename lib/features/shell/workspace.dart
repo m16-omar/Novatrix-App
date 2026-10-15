@@ -58,7 +58,10 @@ List<Tab> tabsFor(Workspace workspace, {required bool signedIn}) => switch (work
           const Tab('/', 'Home', LucideIcons.house),
           const Tab('/courses', 'Courses', LucideIcons.graduationCap),
           const Tab('/consultation', 'Consult', LucideIcons.messageSquarePlus),
-          Tab(signedIn ? '/profile' : '/login', signedIn ? 'Account' : 'Log in', LucideIcons.circleUserRound),
+          // Signed out, the page holds the app's settings and a way to log in.
+          signedIn
+              ? const Tab('/profile', 'Profile', LucideIcons.circleUserRound)
+              : const Tab('/profile', 'Settings', LucideIcons.settings),
         ],
       Workspace.learner => const [
           Tab('/learn', 'Dashboard', LucideIcons.layoutDashboard),
@@ -80,8 +83,14 @@ List<Tab> tabsFor(Workspace workspace, {required bool signedIn}) => switch (work
         ],
     };
 
+const _authPaths = {'/login', '/signup', '/forgot-password'};
+
 /// Which tab a path belongs to: the longest tab path that prefixes it.
-int tabIndexFor(List<Tab> tabs, String path) {
+int tabIndexFor(List<Tab> tabs, String path) => matchingTab(tabs, path) ?? 0;
+
+/// The tab a path belongs to, or null when it's none of them (a signed-in learner on the public
+/// Home page, say).
+int? matchingTab(List<Tab> tabs, String path) {
   var best = 0;
   var bestLength = -1;
   for (var i = 0; i < tabs.length; i++) {
@@ -92,9 +101,28 @@ int tabIndexFor(List<Tab> tabs, String path) {
       bestLength = t.length;
     }
   }
-  // Course pages live under the Courses tab on the public site.
-  if (bestLength < 0 && path.startsWith('/courses')) {
-    return tabs.indexWhere((t) => t.path == '/courses').clamp(0, tabs.length - 1);
-  }
-  return best;
+  if (bestLength >= 0) return best;
+  // Course pages and the cart live under the Courses tab on the public site.
+  if (path.startsWith('/courses') || path == '/cart') return _indexOf(tabs, '/courses');
+  // Logging in and signing up are reached from the Profile tab.
+  if (_authPaths.contains(path)) return _indexOf(tabs, '/profile');
+  return null;
 }
+
+int? _indexOf(List<Tab> tabs, String path) {
+  final i = tabs.indexWhere((t) => t.path == path);
+  return i < 0 ? null : i;
+}
+
+/// The bottom bar's area. Signed-in people always get their own area's bar, also on shared pages
+/// (Home, courses, consultation): the area the page belongs to, else the one they were last in,
+/// else their main one. Visitors get the public bar.
+Workspace barWorkspaceFor(String path, Roles? roles, {Workspace? lastArea}) {
+  final here = Workspace.forPath(path, roles);
+  if (roles == null || (here != Workspace.public && !path.startsWith('/profile'))) return here;
+  final available = Workspace.available(roles);
+  return lastArea != null && available.contains(lastArea) ? lastArea : Workspace.primaryFor(roles);
+}
+
+/// Pages shown without the bottom bar: taking a quiz or exam.
+bool isFocusedPath(String path) => RegExp(r'^/learn/course/[^/]+/assessment/\d+/take$').hasMatch(path);

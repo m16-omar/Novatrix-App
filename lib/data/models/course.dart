@@ -1,3 +1,4 @@
+import '../../core/format.dart';
 import 'json.dart';
 
 class Cohort {
@@ -38,6 +39,7 @@ class Course {
     this.projects = const [],
     this.certificate = '',
     this.price = 0,
+    this.isFree = false,
     this.currency = 'USD',
     this.coverImageUrl,
     this.cohorts = const [],
@@ -57,6 +59,9 @@ class Course {
   final List<String> projects;
   final String certificate;
   final double price;
+
+  /// Free to enroll: marked free in the admin, or priced at nothing. Enrolling never asks for payment.
+  final bool isFree;
   final String currency;
   final String? coverImageUrl;
   final List<Cohort> cohorts;
@@ -76,6 +81,8 @@ class Course {
         projects: strings(j['hands_on_projects']),
         certificate: str(j['certificate_details']),
         price: doubleOf(j['price_amount']),
+        // Older backends don't send `is_free`: a course priced at nothing is free.
+        isFree: j['is_free'] == null ? doubleOf(j['price_amount']) == 0 : boolOf(j['is_free']),
         currency: str(j['price_currency']).isEmpty ? 'USD' : str(j['price_currency']),
         coverImageUrl: strOrNull(j['cover_image_url']),
         cohorts: jsonList(j['cohorts']).map(Cohort.fromJson).toList(),
@@ -91,6 +98,12 @@ class Course {
       };
 
   /// The short level, e.g. "Intermediate" from "Intermediate / Career Transition".
+  /// "Free", or the price, for showing on cards and pages.
+  String get priceLabel => isFree ? 'Free' : formatMoney(price, currency);
+
+  /// What enrolling costs: nothing for a free course.
+  double get effectivePrice => isFree ? 0 : price;
+
   String get levelShort => level.split(' / ').first;
 }
 

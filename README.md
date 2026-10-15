@@ -64,19 +64,73 @@ flutter analyze
 flutter test                                  # unit tests
 
 # End-to-end on a simulator against a local backend with QA data:
-#   cd ../TIIPE/backend && venv/bin/python manage.py shell < /path/to/tool/qa_seed.py
+#   cd ../../TIIPE/backend && venv/bin/python manage.py shell < /path/to/tool/qa_seed.py
 flutter drive --driver=test_driver/integration_test.dart \
   --target=integration_test/app_test.dart -d <simulator-id> \
   --dart-define=API_BASE_URL=http://localhost:8000/api/v1
 # Screenshots land in build/screenshots. Remove the data afterwards with tool/qa_clean.py.
 ```
 
-## Before release
+## Website content
 
-- App icons and splash screen (the brand files are in `assets/images/`).
-- Bundle id `com.thenovatrix.novatrix_app`: confirm, then set up signing (Apple team, Android keystore).
-- Production `API_BASE_URL` and `SITE_URL`.
-- Privacy policy URL and data-safety answers for the stores (the app stores only the login session on
-  the device).
-- Push notifications (review feedback, announcements, ticket updates) are a good next step; they
-  need Firebase/APNs set up.
+The services, training programs, solutions, industries, and insights articles come from thenovatrix.com and
+are bundled in `assets/content/site.json`. Refresh them after the website changes, then run `flutter test`
+(it checks the content's internal links):
+
+```bash
+node tool/sync_site_content.js
+```
+
+The home and About page copy (hero, mission, values, impact figures, testimonials, policies) is written into
+the website's page layouts rather than its data, so it is kept by hand in `lib/data/site_content.dart`.
+
+## Releasing
+
+Store text, privacy answers, and review notes: [store/listing.md](store/listing.md).
+
+```bash
+API_BASE_URL=https://<production api>/api/v1 tool/build_release.sh   # android | ios | all
+```
+
+A release build refuses to start without an `https` `API_BASE_URL`, so a store build can never point at a
+development server. Bump `version:` in `pubspec.yaml` before every upload.
+
+- **App ID:** `com.thenovatrix.app` on both stores. It can't change after the first release.
+- **iOS signing:** automatic, with the Apple team in the Xcode project. The app is iPhone-only (`TARGETED_DEVICE_FAMILY = 1`).
+- **Android signing:** `android/key.properties` (not in git) points at the upload keystore. If it's missing,
+  release builds fall back to debug signing, which Play rejects. Back up the keystore and its password: losing
+  them means asking Google to reset the upload key.
+- **Icons:** generated from `design/icon/` with `dart run flutter_launcher_icons`.
+- **Paying for courses on iOS:** the cart's "Enroll now" opens the payment page on iOS too, by choice. Apple
+  may reject this under guideline 3.1.1 (outside payment for digital services used in the app). If it does,
+  switch `AppConfig.allowsWebCheckout` off for iOS: the iOS cart then sends an enrollment enquiry instead.
+- **Account deletion:** Profile > Delete my account sends a request to the team through the website's
+  contact form (`/cms/contact/`). Someone must act on these requests. A backend endpoint that deletes the
+  account directly would be better.
+
+## Push notifications
+
+The app gets a push when a facilitator reviews an assignment, when a course posts an announcement, and when
+staff update a client's support ticket. Tapping one opens that lesson, course, or the Support tab. The backend
+sends them (`apps/notifications/push.py`, `apps/novatrix_services/push_events.py` in TIIPE/backend).
+
+Push needs Firebase on the app side and a Firebase service account on the backend; without them it's
+simply off. Setup:
+
+1. **Firebase project:** done. The app uses project `tiipe-17751`; the iOS and Android app IDs and their
+   API keys are built into `lib/core/push.dart` (they identify the app, they aren't secrets). There's no need
+   to add `GoogleService-Info.plist` or `google-services.json` to the project.
+2. **APNs key (iOS):** in the Apple Developer account, Keys > create a key with Apple Push Notifications
+   service, then upload the `.p8` in Firebase > Project settings > Cloud Messaging > Apple app configuration.
+3. **Backend:** Firebase > Project settings > Service accounts > Generate new private key. Set
+   `FIREBASE_CREDENTIALS` on the backend to that file's path or its JSON, and `pip install -r requirements.txt`.
+   Keep that file out of git: it's a secret.
+4. **Other Firebase projects** (staging, say): override the built-in values at build time with
+   `--dart-define=FIREBASE_API_KEY=… FIREBASE_ANDROID_API_KEY=… FIREBASE_PROJECT_ID=… FIREBASE_SENDER_ID=…
+   FIREBASE_IOS_APP_ID=… FIREBASE_ANDROID_APP_ID=…`; `tool/build_release.sh` passes them through when they're set.
+
+iOS pushes need the APNs key (step 2); test them on a real phone.
+
+## Later
+
+- Saving courses and projects for offline viewing.

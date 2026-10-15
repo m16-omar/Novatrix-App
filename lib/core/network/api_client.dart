@@ -10,7 +10,9 @@ import 'token_store.dart';
 ///
 /// Every request carries `X-Tenant: novatrix`. Signed-in requests carry the JWT; on a
 /// 401 the client refreshes the pair once (concurrent requests share the refresh) and
-/// retries. If the refresh fails, the session is cleared and [onSessionExpired] runs.
+/// retries. If the backend refuses the refresh, the session is cleared and
+/// [onSessionExpired] runs. If it can't be reached, the session is kept and the request
+/// fails with a connection error, so a returning user isn't signed out by an outage.
 class ApiClient {
   ApiClient(this._tokens, {this.onSessionExpired})
       : _dio = Dio(BaseOptions(
@@ -24,7 +26,10 @@ class ApiClient {
   final Dio _dio;
   final TokenStore _tokens;
   void Function()? onSessionExpired;
-  Completer<bool>? _refreshing;
+  Completer<_Refresh>? _refreshing;
+
+  /// Why the last refresh got no usable answer, to report instead of the original 401.
+  DioException? _refreshFailure;
 
   Future<T> get<T>(String path, {bool auth = false, Map<String, dynamic>? query}) =>
       _send<T>('GET', path, auth: auth, query: query);
@@ -65,8 +70,18 @@ class ApiClient {
         response = await attempt();
       } on DioException catch (e) {
         final expired = e.response?.statusCode == 401 && auth && await _tokens.read() != null;
-        if (!expired || !await _refresh()) rethrow;
-        response = await attempt();
+        if (!expired) rethrow;
+        switch (await _refresh()) {
+          case _Refresh.renewed:
+            response = await attempt();
+          case _Refresh.rejected:
+            rethrow;
+          case _Refresh.unreachable:
+            final failure = _refreshFailure;
+            throw failure == null
+                ? ApiException("We couldn't reach our server. Check your connection and try again.")
+                : ApiException.fromDio(failure);
+        }
       }
       return response.data as T;
     } on DioException catch (e) {
@@ -75,14 +90,14 @@ class ApiClient {
   }
 
   /// Exchanges the refresh token for a new pair. Concurrent callers share one request.
-  Future<bool> _refresh() {
+  Future<_Refresh> _refresh() {
     final pending = _refreshing;
     if (pending != null) return pending.future;
-    final completer = _refreshing = Completer<bool>();
+    final completer = _refreshing = Completer<_Refresh>();
     () async {
       try {
         final tokens = await _tokens.read();
-        if (tokens == null) return completer.complete(false);
+        if (tokens == null) return completer.complete(_Refresh.rejected);
         final res = await _dio.post<Map<String, dynamic>>(
           '/auth/token/refresh/',
           data: {'refresh': tokens.refresh},
@@ -92,11 +107,23 @@ class ApiClient {
           access: data['access'] as String,
           refresh: (data['refresh'] as String?) ?? tokens.refresh,
         ));
-        completer.complete(true);
+        completer.complete(_Refresh.renewed);
+      } on DioException catch (e) {
+        final status = e.response?.statusCode ?? 0;
+        if (status == 0 || status >= 500) {
+          // No answer, or the server is failing: keep the session and try again later.
+          _refreshFailure = e;
+          completer.complete(_Refresh.unreachable);
+        } else {
+          // The backend refused the refresh token (expired, revoked, or the account is inactive).
+          await _tokens.write(null);
+          onSessionExpired?.call();
+          completer.complete(_Refresh.rejected);
+        }
       } catch (_) {
         await _tokens.write(null);
         onSessionExpired?.call();
-        completer.complete(false);
+        completer.complete(_Refresh.rejected);
       } finally {
         _refreshing = null;
       }
@@ -104,6 +131,8 @@ class ApiClient {
     return completer.future;
   }
 }
+
+enum _Refresh { renewed, rejected, unreachable }
 
 /// Lists may come back plain or wrapped in the backend's paginated envelope.
 List<Map<String, dynamic>> listOf(Object? data) {
